@@ -19,6 +19,7 @@
 | 5 | Additional Adapters | 11–13 | Claude / OpenAI / Gemini adapters (parallel) |
 | 6 | Windows Installer | 14 | Zero-install `.exe` for GPs |
 | 7 | GP Persona *(optional)* | 15–19 | Multi-patient index; FHIR R4 |
+| 8 | Container Deployment | parallel | Docker image; Compose stack; GHCR publish |
 
 ---
 
@@ -119,7 +120,7 @@
 - [x] `P2-04` — Implement `cli.py extract` command with per-file progress output
 - [ ] `P2-05` — Test Ollama with `phi3:mini` on full corpus; record precision/recall per field
 - [ ] `P2-06` — Tune prompts based on Ollama accuracy results
-- [x] `P2-07` — `tests/test_cli.py`: integration test — run `cliniq extract` on corpus dir; assert output JSON exists + validates ← **in progress**
+- [x] `P2-07` — `tests/test_cli.py`: integration test — run `cliniq extract` on corpus dir; assert output JSON exists + validates
 
 ### Acceptance Criteria
 
@@ -360,6 +361,44 @@
 - [x] No secrets stored as GitHub Actions secrets except those explicitly required (none at this stage)
 - [x] `PLAN.md` task checkboxes updated to reflect actual state
 - [x] **Human approval received before phase is marked complete**
+
+---
+
+## Phase 8 — Container Deployment
+
+**Goal:** Zero-prereq deployment path via Docker; Ollama adapter works across container boundaries.
+
+### Tasks
+
+- [ ] `PC-01` — `OllamaAdapter`: read `OLLAMA_BASE_URL` env var (default `http://localhost:11434`) — replace hardcoded host
+- [ ] `PC-02` — Write `Dockerfile`: `python:3.11-slim`, `apt-get install tesseract-ocr`, `uv pip install`, `ENTRYPOINT ["cliniq"]`
+- [ ] `PC-03` — Write `docker-compose.yml`: two services — `cliniq` (build: .) + `ollama` (image: `ollama/ollama`); set `OLLAMA_BASE_URL=http://ollama:11434` on cliniq service; mount `./records` volume
+- [ ] `PC-04` — Write `.dockerignore`: exclude `.git`, `samplepdf/`, `test_corpus/`, `__pycache__`, `*.pyc`, `.env*`
+- [ ] `PC-05` — Container smoke test: `docker build -t cliniq . && docker run --rm cliniq cliniq --help` exits 0
+- [ ] `PC-06` — CI: add `docker-build` job to `.github/workflows/ci.yml` — `docker build -t cliniq .` on every PR (no push); required check
+- [ ] `PC-07` — CI: add Docker push to `.github/workflows/release.yml` — on semver tag build + push `ghcr.io/<owner>/cliniq:<tag>` and `ghcr.io/<owner>/cliniq:latest`
+- [ ] `PC-08` — `scripts/local_test.py` check 6: `docker build` + `docker run --help` smoke (skipped gracefully if Docker not available)
+
+### Acceptance Criteria
+
+- [ ] `OllamaAdapter` reads `OLLAMA_BASE_URL` from environment; unit test verifies default + override
+- [ ] `docker build -t cliniq .` succeeds on a clean checkout (no cached layers)
+- [ ] `docker run --rm cliniq cliniq --help` exits 0 and lists `extract`
+- [ ] `docker compose up` starts both services; cliniq reaches Ollama via `http://ollama:11434`
+- [ ] `.dockerignore` excludes `samplepdf/`, `test_corpus/`, `.git` — image contains no PHI or local PDFs
+- [ ] CI `docker-build` job green on every PR
+- [ ] Release pipeline pushes `ghcr.io/<owner>/cliniq:<version>` on semver tag
+- [ ] `scripts/local_test.py` check 6 passes when Docker is available; skips gracefully otherwise
+
+### Definition of Done
+
+- [ ] All task checkboxes in this phase are checked
+- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
+- [ ] Remote CI green on `main` including `docker-build` job
+- [ ] No PHI, API keys, or real patient data in the built image (verified by `docker run --rm cliniq find / -name "*.pdf" 2>/dev/null` returning empty)
+- [ ] `PLAN.md` task checkboxes updated to reflect actual state
+- [ ] **Human approval received before phase is marked complete**
 
 ---
 

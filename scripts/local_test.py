@@ -9,6 +9,7 @@ Checks (in order):
   3. Ingestion   — committed fixture PDF (always runs)
   4. Logging     — DEBUG records emitted during ingestion
   5. Test suite  — pytest with 80% coverage gate
+  6. Docker      — `docker build` + `docker run --help` smoke (skipped if Docker absent)
 """
 
 from __future__ import annotations
@@ -209,6 +210,49 @@ def check_test_suite() -> None:
 
 
 # ---------------------------------------------------------------------------
+# 6. Docker smoke
+# ---------------------------------------------------------------------------
+
+_DOCKER_IMAGE = "cliniq-local-test"
+
+
+def check_docker_build() -> None:
+    _section("Docker smoke (build + run --help)")
+
+    has_docker = subprocess.run(
+        ["docker", "info"],
+        capture_output=True,
+    ).returncode == 0
+    if not has_docker:
+        _skip("docker build", "Docker daemon not available")
+        return
+
+    build = subprocess.run(
+        ["docker", "build", "-t", _DOCKER_IMAGE, "."],
+        capture_output=True,
+        text=True,
+        cwd=PROJECT_ROOT,
+    )
+    if build.returncode != 0:
+        _fail("docker build", build.stderr.splitlines()[-1] if build.stderr else "non-zero exit")
+        return
+    _pass("docker build succeeded")
+
+    run = subprocess.run(
+        ["docker", "run", "--rm", _DOCKER_IMAGE, "cliniq", "--help"],
+        capture_output=True,
+        text=True,
+    )
+    if run.returncode != 0:
+        _fail("docker run --help", f"exit {run.returncode}")
+        return
+    if "extract" not in run.stdout:
+        _fail("docker run --help", "'extract' not in help output")
+        return
+    _pass("docker run --rm cliniq --help exits 0 and lists 'extract'")
+
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
@@ -222,6 +266,7 @@ def main() -> None:
     check_ingestion_fixture()
     check_logging()
     check_test_suite()
+    check_docker_build()
 
     print()
     if _failures:

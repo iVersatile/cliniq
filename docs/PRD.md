@@ -99,6 +99,16 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 | FR-5.3 | Tool: `get_timeline(records_dir)` |
 | FR-5.4 | Server must work with Claude Desktop, Open WebUI, and any MCP-compatible client |
 
+### FR-7 Container Deployment
+
+| ID | Requirement |
+|----|-------------|
+| FR-7.1 | `Dockerfile` builds a self-contained cliniq image on `python:3.11-slim` with Tesseract 5 installed via `apt` |
+| FR-7.2 | `docker-compose.yml` defines two services: `cliniq` (build: .) and `ollama` (image: `ollama/ollama`), linked so cliniq reaches Ollama without touching the host network |
+| FR-7.3 | `OllamaAdapter` reads `OLLAMA_BASE_URL` env var (default `http://localhost:11434`) — no hardcoded host |
+| FR-7.4 | `docker run cliniq cliniq --help` exits 0 (smoke test) |
+| FR-7.5 | Container image must not embed any PHI, API keys, or real patient data |
+
 ---
 
 ## 6. Non-Functional Requirements
@@ -107,10 +117,10 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 |----------|-------------|
 | **Privacy** | No PHI transmitted over network when using Ollama backend |
 | **Performance** | Process a 10-page born-digital PDF in < 30s on CPU (Apple Silicon); scanned < 90s |
-| **Platform** | macOS, Linux, Windows 10+ |
+| **Platform** | macOS, Linux, Windows 10+; Docker (linux/amd64 and linux/arm64) |
 | **Python** | >= 3.11 |
 | **Accuracy** | >= 90% precision on medication name + dose extraction measured against ground-truth corpus |
-| **Packaging** | `pip install cliniq` installs all dependencies; Tesseract documented as system prerequisite |
+| **Packaging** | `pip install cliniq` installs all dependencies; Tesseract documented as system prerequisite; Docker Compose as an alternative zero-prereq deployment path |
 
 ---
 
@@ -124,6 +134,9 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 - [ ] `cliniq serve` starts MCP server; Claude Desktop can call `extract_document`
 - [ ] `pip install cliniq` succeeds on macOS, Linux, Windows with Python 3.11+
 - [ ] No PHI written to logs at any log level
+- [ ] `docker build -t cliniq .` succeeds on a clean checkout
+- [ ] `docker run --rm cliniq cliniq --help` exits 0
+- [ ] `docker compose up` starts cliniq + ollama; `cliniq extract` reaches Ollama at `http://ollama:11434`
 
 ---
 
@@ -156,6 +169,8 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 | FR-6.3 | No secrets or PHI in CI logs at any verbosity level |
 | FR-6.4 | Wheel artifact published to PyPI on semver tag via trusted publisher (OIDC, no token in secrets) |
 | FR-6.5 | `pip install cliniq` smoke test runs on macOS, Linux, Windows in release pipeline |
+| FR-6.6 | `docker build -t cliniq .` runs as a required check on every PR (build must succeed; no push required on PRs) |
+| FR-6.7 | On semver tag, Docker image is built and pushed to `ghcr.io` alongside the PyPI release |
 
 ### Acceptance Criteria (CI/CD gate)
 
@@ -163,3 +178,5 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 - [ ] Coverage report posted as PR comment
 - [ ] Release pipeline produces `cliniq-x.y.z-py3-none-any.whl` and publishes to PyPI
 - [ ] No `ANTHROPIC_API_KEY`, NHS numbers, or real patient names appear in any CI log
+- [ ] Docker build check passes on every PR without pushing an image
+- [ ] Tagged release pushes `ghcr.io/…/cliniq:x.y.z` and `ghcr.io/…/cliniq:latest`
