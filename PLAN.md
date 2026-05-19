@@ -72,8 +72,8 @@
 - [x] `P1-00` — Fix Phase 0 code-review findings (severity order): (a) CRITICAL: wrap pytesseract calls in `ocr_page()` with try/except — unhandled exceptions crash full ingestion; (b) CRITICAL: wrap `pdfplumber.open()` loop in `read_pdf()` with try/except — corrupted PDF gives raw traceback with no context; (c) HIGH: replace `page: object` with `pdfplumber.page.Page` type in `ocr_page()` signature — defeats mypy; (d) HIGH: use context-manager to restore logger level in `_run_ingestion()` (local_test.py) — global mutation is race-prone in parallel test runs
 - [x] `P1-01` — Finalise Pydantic models: `MedicalNote`, `Contact`, `Appointment`, `Medication`, `Symptom`
 - [x] `P1-02` — Write extraction prompt for `medical_note` (outpatient letter template)
-- [ ] `P1-03` — Write extraction prompt for `medical_note` (discharge summary template) ← in progress
-- [ ] `P1-04` — Write extraction prompt for `medical_note` (lab report template)
+- [x] `P1-03` — Write extraction prompt for `medical_note` (discharge summary template)
+- [ ] `P1-04` — Write extraction prompt for `medical_note` (lab report template) ← in progress
 - [ ] `P1-05` — Write extraction prompt for `medication` + `contact` + `appointment`
 - [ ] `P1-06` — Test all prompts against Claude API (fastest feedback loop; not the shipping backend)
 - [ ] `P1-07` — Add source-sentence citation field to medication + diagnosis extraction
