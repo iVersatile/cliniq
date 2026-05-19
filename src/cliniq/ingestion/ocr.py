@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytesseract  # type: ignore[import-untyped]
+from PIL import Image
 
 from cliniq.ingestion.pdf_reader import PageText
 
@@ -12,9 +13,10 @@ _LOW_CONF_THRESHOLD = 60
 
 def ocr_page(page: object, page_number: int) -> PageText:
     """Render a pdfplumber page to image and run Tesseract OCR."""
-    import PIL.Image
+    from cliniq.ingestion.preprocessing import preprocess_image
 
-    img: PIL.Image.Image = page.to_image(resolution=300).original  # type: ignore[attr-defined]
+    raw: Image.Image = page.to_image(resolution=300).original  # type: ignore[attr-defined]
+    img = preprocess_image(raw)
     data = pytesseract.image_to_data(img, output_type=pytesseract.Output.DICT)
 
     confidences = [int(c) for c in data["conf"] if str(c).lstrip("-").isdigit() and int(c) >= 0]
