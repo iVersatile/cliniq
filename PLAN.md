@@ -114,12 +114,12 @@
 ### Tasks
 
 - [x] `P2-01` — Implement `OllamaAdapter.complete_json()` with JSON extraction fallback (find `{...}` in response)
-- [ ] `P2-02` — Wire `ExtractionEngine` prompts → adapter → schema validation ← **in progress**
-- [ ] `P2-03` — Implement `json_writer.py` and `markdown_writer.py` (currently stubs)
-- [ ] `P2-04` — Implement `cli.py extract` command with per-file progress output
+- [x] `P2-02` — Wire `ExtractionEngine` prompts → adapter → schema validation
+- [x] `P2-03` — Implement `json_writer.py` and `markdown_writer.py` (currently stubs)
+- [x] `P2-04` — Implement `cli.py extract` command with per-file progress output
 - [ ] `P2-05` — Test Ollama with `phi3:mini` on full corpus; record precision/recall per field
 - [ ] `P2-06` — Tune prompts based on Ollama accuracy results
-- [ ] `P2-07` — `tests/test_cli.py`: integration test — run `cliniq extract` on corpus dir; assert output JSON exists + validates
+- [x] `P2-07` — `tests/test_cli.py`: integration test — run `cliniq extract` on corpus dir; assert output JSON exists + validates ← **in progress**
 
 ### Acceptance Criteria
 

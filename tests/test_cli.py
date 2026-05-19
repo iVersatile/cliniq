@@ -50,3 +50,32 @@ def test_extract_processes_pdf(tmp_path: Path) -> None:
     assert result.exit_code == 0
     mock_engine.process.assert_called_once_with(pdf)
     mock_result.write.assert_called_once()
+
+
+def test_extract_output_json_exists_and_is_valid(tmp_path: Path) -> None:
+    """Output JSON files are written to disk and parse as valid JSON lists."""
+    import json
+
+    from cliniq.extraction.engine import ExtractionResult
+
+    pdf = tmp_path / "sample.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    out_dir = tmp_path / "out"
+
+    real_result = ExtractionResult(source=pdf)
+    mock_engine = MagicMock()
+    mock_engine.process.return_value = real_result
+
+    runner = CliRunner()
+    with patch("cliniq.adapters.get_adapter", return_value=MagicMock()):
+        with patch("cliniq.extraction.engine.ExtractionEngine", return_value=mock_engine):
+            invoke_result = runner.invoke(
+                main, ["extract", str(tmp_path), "--output", str(out_dir)]
+            )
+
+    assert invoke_result.exit_code == 0
+    dest = out_dir / "sample"
+    for name in ("medical_note", "contact", "appointment", "medication", "symptom"):
+        path = dest / f"{name}.json"
+        assert path.exists(), f"{name}.json not found"
+        assert isinstance(json.loads(path.read_text()), list)
