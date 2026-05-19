@@ -36,7 +36,7 @@
 - [x] `P0-06` — Write ground-truth JSON for all 10 corpus docs
 - [x] `P0-07` — `tests/test_ingestion.py`: parametrised tests against corpus; assert text non-empty + flag correctness
 - [x] `P0-08` — Image preprocessing pipeline before Tesseract: grayscale conversion, contrast enhancement, sharpening, binarisation (Otsu threshold); exposed as `preprocess_image()` in `cliniq/ingestion/preprocessing.py`
-- [ ] `P0-09` — Add structured logging to ingestion pipeline: log per-page OCR fallback decisions, Tesseract mean confidence scores, and any caught exceptions using Python `logging` module; no `print()` statements anywhere in `src/cliniq/ingestion/`
+- [x] `P0-09` — Add structured logging to ingestion pipeline: log per-page OCR fallback decisions, Tesseract mean confidence scores, and any caught exceptions using Python `logging` module; no `print()` statements anywhere in `src/cliniq/ingestion/`
 
 ### Acceptance Criteria
 
@@ -48,7 +48,7 @@
 - [x] `pytest tests/test_ingestion.py` passes parametrised against all 10 corpus docs with zero failures
 - [x] No corpus PDF causes an unhandled exception
 - [x] `preprocess_image()` improves or maintains Tesseract confidence vs. raw image on scanned corpus (mean conf delta >= 0)
-- [ ] Ingestion pipeline emits `logging.DEBUG` records for OCR fallback decisions and confidence scores; no `print()` in `src/cliniq/ingestion/`
+- [x] Ingestion pipeline emits `logging.DEBUG` records for OCR fallback decisions and confidence scores; no `print()` in `src/cliniq/ingestion/`
 
 ### Definition of Done
 
