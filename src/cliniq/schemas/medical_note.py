@@ -5,7 +5,7 @@ from enum import StrEnum
 from typing import Literal
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class NoteType(StrEnum):
@@ -19,6 +19,8 @@ class NoteType(StrEnum):
 
 
 class Diagnosis(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     code: str
     system: Literal["ICD-10", "SNOMED-CT", "other"] = "ICD-10"
     label: str
@@ -30,6 +32,8 @@ class NoteFlag(StrEnum):
 
 
 class MedicalNote(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     id: UUID = Field(default_factory=uuid4)
     date: date
     source_file: str

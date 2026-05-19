@@ -4,7 +4,7 @@ from datetime import date
 from enum import StrEnum
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SeverityTrend(StrEnum):
@@ -16,6 +16,8 @@ class SeverityTrend(StrEnum):
 
 
 class Symptom(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     id: UUID = Field(default_factory=uuid4)
     symptom: str
     first_noted: date | None = None
