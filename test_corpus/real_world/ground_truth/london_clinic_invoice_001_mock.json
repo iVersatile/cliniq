@@ -1,0 +1,22 @@
+{
+  "source_file": "london_clinic_invoice_001_mock.pdf",
+  "page_count": 2,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1039,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 2,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 488,
+      "text_nonempty": true
+    }
+  ]
+}

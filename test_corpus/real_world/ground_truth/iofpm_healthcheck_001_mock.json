@@ -1,0 +1,334 @@
+{
+  "source_file": "iofpm_healthcheck_001_mock.pdf",
+  "page_count": 41,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1405,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 2,
+      "via_ocr": true,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 680,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 3,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 595,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 4,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 637,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 5,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 570,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 6,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 622,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 7,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 590,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 8,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 595,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 9,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 588,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 10,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 637,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 11,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 517,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 12,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 509,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 13,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 792,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 14,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 362,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 15,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 57,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 16,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 784,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 17,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 528,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 18,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 849,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 19,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 204,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 20,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 186,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 21,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 215,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 22,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 210,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 23,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 207,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 24,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 925,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 25,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 216,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 26,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 242,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 27,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 552,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 28,
+      "via_ocr": true,
+      "low_confidence": true,
+      "is_handwritten": false,
+      "text_length": 495,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 29,
+      "via_ocr": true,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 463,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 30,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 657,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 31,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 274,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 32,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 461,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 33,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 316,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 34,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 659,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 35,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 170,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 36,
+      "via_ocr": true,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 544,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 37,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 773,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 38,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 284,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 39,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 282,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 40,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 314,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 41,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 841,
+      "text_nonempty": true
+    }
+  ]
+}

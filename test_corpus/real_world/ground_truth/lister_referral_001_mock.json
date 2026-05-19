@@ -1,0 +1,38 @@
+{
+  "source_file": "lister_referral_001_mock.pdf",
+  "page_count": 4,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 822,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 2,
+      "via_ocr": true,
+      "low_confidence": true,
+      "is_handwritten": false,
+      "text_length": 30,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 3,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1449,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 4,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 226,
+      "text_nonempty": true
+    }
+  ]
+}

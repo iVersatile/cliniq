@@ -12,6 +12,7 @@ from cliniq.ingestion.pdf_reader import read_pdf
 CORPUS_ROOT = Path(__file__).parent.parent / "test_corpus"
 BORN_DIGITAL = sorted((CORPUS_ROOT / "born_digital").glob("*.pdf"))
 SCANNED = sorted((CORPUS_ROOT / "scanned").glob("*.pdf"))
+REAL_WORLD = sorted((CORPUS_ROOT / "real_world").glob("*.pdf"))
 
 
 def _load_gt(pdf: Path) -> dict:  # type: ignore[type-arg]
@@ -44,7 +45,24 @@ def test_scanned_ocr_fallback(pdf: Path) -> None:
         assert page.text.strip() or page.is_handwritten, f"{pdf.name}: OCR returned no text"
 
 
-ALL_PDFS = BORN_DIGITAL + SCANNED
+@pytest.mark.parametrize("pdf", REAL_WORLD, ids=[p.stem for p in REAL_WORLD])
+def test_real_world_mixed(pdf: Path) -> None:
+    gt = _load_gt(pdf)
+    doc = read_pdf(pdf)
+
+    assert len(doc.pages) == gt["page_count"]
+    for page, gt_page in zip(doc.pages, gt["pages"]):
+        if not gt_page["via_ocr"]:
+            assert page.via_ocr is False, f"{pdf.name} p{page.page_number}: expected text layer"
+            assert len(page.text) == gt_page["text_length"]
+        else:
+            assert page.via_ocr is True, f"{pdf.name} p{page.page_number}: expected OCR path"
+            if gt_page["text_nonempty"]:
+                has_text = page.text.strip() or page.is_handwritten
+                assert has_text, f"{pdf.name} p{page.page_number}: OCR returned no text"
+
+
+ALL_PDFS = BORN_DIGITAL + SCANNED + REAL_WORLD
 
 
 @pytest.mark.parametrize("pdf", ALL_PDFS, ids=[p.stem for p in ALL_PDFS])

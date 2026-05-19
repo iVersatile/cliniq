@@ -1,0 +1,118 @@
+{
+  "source_file": "onewelbeck_ent_vestibular_001_mock.pdf",
+  "page_count": 14,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1666,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 2,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 585,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 3,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 626,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 4,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 385,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 5,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 577,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 6,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 556,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 7,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 941,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 8,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 775,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 9,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 306,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 10,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 321,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 11,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 485,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 12,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 388,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 13,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 386,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 14,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1041,
+      "text_nonempty": true
+    }
+  ]
+}

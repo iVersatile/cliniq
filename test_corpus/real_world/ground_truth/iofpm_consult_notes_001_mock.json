@@ -1,0 +1,22 @@
+{
+  "source_file": "iofpm_consult_notes_001_mock.pdf",
+  "page_count": 2,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1520,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 2,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1283,
+      "text_nonempty": true
+    }
+  ]
+}

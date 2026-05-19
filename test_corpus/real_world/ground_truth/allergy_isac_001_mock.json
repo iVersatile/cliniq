@@ -1,0 +1,78 @@
+{
+  "source_file": "allergy_isac_001_mock.pdf",
+  "page_count": 9,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1071,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 2,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 600,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 3,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1371,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 4,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1417,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 5,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1169,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 6,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1674,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 7,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1408,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 8,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1295,
+      "text_nonempty": true
+    },
+    {
+      "page_number": 9,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 1009,
+      "text_nonempty": true
+    }
+  ]
+}

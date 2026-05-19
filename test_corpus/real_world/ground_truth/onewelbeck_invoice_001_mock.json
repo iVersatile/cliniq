@@ -1,0 +1,14 @@
+{
+  "source_file": "onewelbeck_invoice_001_mock.pdf",
+  "page_count": 1,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 809,
+      "text_nonempty": true
+    }
+  ]
+}
