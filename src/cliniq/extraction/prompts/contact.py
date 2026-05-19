@@ -49,7 +49,7 @@ def extract_contacts(
         for item in raw:
             try:
                 result.contacts.append(Contact.model_validate(item))
-            except (ValidationError, ValueError) as exc:
+            except ValidationError as exc:
                 log.warning("extract_contacts: skipping item — parse failed (%s)", exc)
-    except (ValidationError, ValueError, KeyError) as exc:
+    except (ValueError, KeyError) as exc:
         log.warning("extract_contacts: parse failed (%s)", exc)

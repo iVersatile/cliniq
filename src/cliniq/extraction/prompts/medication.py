@@ -50,7 +50,7 @@ def extract_medications(
         for item in raw:
             try:
                 result.medications.append(Medication.model_validate(item))
-            except (ValidationError, ValueError) as exc:
+            except ValidationError as exc:
                 log.warning("extract_medications: skipping item — parse failed (%s)", exc)
-    except (ValidationError, ValueError, KeyError) as exc:
+    except (ValueError, KeyError) as exc:
         log.warning("extract_medications: parse failed (%s)", exc)

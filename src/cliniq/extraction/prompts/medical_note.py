@@ -135,9 +135,17 @@ def extract_medical_note_lab_report(
         log.warning("extract_medical_note_lab_report: parse failed (%s)", exc)
 
 
-def extract_medical_note(
+def extract_outpatient_note(
     doc: DocumentText,
     adapter: LLMAdapter,
     result: ExtractionResult,
 ) -> None:
+    """Entry point for outpatient letters only.
+
+    See extract_medical_note_discharge / extract_medical_note_lab_report for other note types.
+    """
     extract_medical_note_outpatient(doc, adapter, result)
+
+
+# Backward-compatible alias used by existing tests.
+extract_medical_note = extract_outpatient_note

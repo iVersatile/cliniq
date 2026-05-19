@@ -50,7 +50,7 @@ def extract_appointments(
             try:
                 appt = Appointment.model_validate(item)
                 result.appointments.append(appt)
-            except (ValidationError, ValueError) as exc:
+            except ValidationError as exc:
                 log.warning("extract_appointments: skipping item — parse failed (%s)", exc)
-    except (ValidationError, ValueError, KeyError) as exc:
+    except (ValueError, KeyError) as exc:
         log.warning("extract_appointments: parse failed (%s)", exc)

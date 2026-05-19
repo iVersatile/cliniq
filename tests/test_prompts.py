@@ -321,3 +321,57 @@ def test_extract_appointments_bad_response_logs_warning(caplog: MagicMock) -> No
 
     assert result.appointments == []
     assert any("parse failed" in r.message for r in caplog.records)
+
+
+def test_extract_appointments_skips_invalid_item(caplog: MagicMock) -> None:
+    """List with one valid + one invalid item → valid kept, invalid skipped, warning logged."""
+    doc = _make_doc("Appointments on 12 June 2025 and some bad data.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = [
+        {"date": "2025-06-12", "reason": "BP review", "status": "upcoming"},
+        {"date": "not-a-date", "status": "invalid_status"},
+    ]
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.appointment"):
+        extract_appointments(doc, adapter, result)
+
+    assert len(result.appointments) == 1
+    assert str(result.appointments[0].date) == "2025-06-12"
+    assert any("skipping item" in r.message for r in caplog.records)
+
+
+def test_extract_contacts_skips_invalid_item(caplog: MagicMock) -> None:
+    """List with one valid + one invalid item → valid kept, invalid skipped, warning logged."""
+    doc = _make_doc("Royal Free Hospital and some bad data.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = [
+        {"name": "Royal Free Hospital", "is_clinic": True},
+        {"is_clinic": "not-a-bool-field-that-breaks-schema", "name": 12345},
+    ]
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.contact"):
+        extract_contacts(doc, adapter, result)
+
+    assert len(result.contacts) == 1
+    assert result.contacts[0].name == "Royal Free Hospital"
+    assert any("skipping item" in r.message for r in caplog.records)
+
+
+def test_extract_medications_skips_invalid_item(caplog: MagicMock) -> None:
+    """List with one valid + one invalid item → valid kept, invalid skipped, warning logged."""
+    doc = _make_doc("Amlodipine 5 mg once daily. And some corrupted entry.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = [
+        {"name": "Amlodipine", "dose": "5 mg", "frequency": "once daily"},
+        {"dose": 99999, "frequency": None, "extra_unknown_required": True},
+    ]
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.medication"):
+        extract_medications(doc, adapter, result)
+
+    assert len(result.medications) == 1
+    assert result.medications[0].name == "Amlodipine"
+    assert any("skipping item" in r.message for r in caplog.records)

@@ -77,7 +77,13 @@
 - [x] `P1-05` — Write extraction prompt for `medication` + `contact` + `appointment`
 - [x] `P1-06` — Test all prompts against Claude API (fastest feedback loop; not the shipping backend)
 - [x] `P1-07` — Add source-sentence citation field to medication + diagnosis extraction
-- [ ] `P1-08` — `tests/test_prompts.py`: golden-file tests — run prompt on fixture text, assert schema validates + key fields match ground truth ← in progress
+- [x] `P1-08` — `tests/test_prompts.py`: golden-file tests — run prompt on fixture text, assert schema validates + key fields match ground truth
+- [ ] `P1-09` — [CRITICAL] Add per-item skip tests for list extractors: `contact`, `appointment`, `medication` — mixed valid+invalid list → invalid skipped, warning logged
+- [ ] `P1-10` — [HIGH] Strengthen golden-file assertions to full `model_dump()` roundtrip (not field-by-field) in `tests/test_golden.py`
+- [ ] `P1-11` — [HIGH] Add type annotations to `extract_all()` in `src/cliniq/extraction/prompts/__init__.py`
+- [ ] `P1-12` — [MEDIUM] Tighten exception tuples in `appointment.py`, `contact.py`, `medication.py` to only catch exceptions that can actually be raised at each call site
+- [ ] `P1-13` — [MEDIUM] Replace single-element `@pytest.mark.parametrize` lists in `test_golden.py` schema-contract tests with glob-based auto-discovery
+- [ ] `P1-14` — [LOW] Rename `extract_medical_note()` → `extract_outpatient_note()` or add clarifying comment — name currently implies all note types but only calls outpatient variant
 
 ### Acceptance Criteria
 

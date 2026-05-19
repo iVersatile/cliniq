@@ -26,6 +26,16 @@ from cliniq.schemas.medication import Medication
 FIXTURES = Path(__file__).parent / "fixtures"
 GOLDEN = FIXTURES / "golden"
 
+# Auto-discovered golden files for parametrized schema-contract tests.
+_NOTE_FILES = sorted(GOLDEN.glob("*_note.json"))
+_MEDICATION_FILES = sorted(GOLDEN.glob("medications*.json"))
+_CONTACT_FILES = sorted(GOLDEN.glob("contacts*.json"))
+_APPOINTMENT_FILES = sorted(GOLDEN.glob("appointments*.json"))
+
+# Fields generated at instantiation time — excluded from roundtrip comparison.
+_NOTE_EXCLUDE = {"id", "clinic_id", "clinician_id", "medication_ids", "next_appointment_id"}
+_ID_EXCLUDE = {"id"}
+
 
 def _load(name: str) -> object:
     return json.loads((GOLDEN / name).read_text())
@@ -60,8 +70,8 @@ def test_golden_outpatient_note_validates() -> None:
     assert len(result.notes) == 1
     note = result.notes[0]
     assert note.type == NoteType.OUTPATIENT_LETTER
-    assert note.diagnoses[0].code == "R51"
-    assert note.diagnoses[0].citation is not None
+    expected = MedicalNote.model_validate(data)
+    assert note.model_dump(exclude=_NOTE_EXCLUDE) == expected.model_dump(exclude=_NOTE_EXCLUDE)
 
 
 # ---------------------------------------------------------------------------
@@ -79,8 +89,8 @@ def test_golden_discharge_note_validates() -> None:
     assert len(result.notes) == 1
     note = result.notes[0]
     assert note.type == NoteType.DISCHARGE_SUMMARY
-    assert note.diagnoses[0].code == "Z00.0"
-    assert note.diagnoses[0].citation is not None
+    expected = MedicalNote.model_validate(data)
+    assert note.model_dump(exclude=_NOTE_EXCLUDE) == expected.model_dump(exclude=_NOTE_EXCLUDE)
 
 
 # ---------------------------------------------------------------------------
@@ -98,8 +108,8 @@ def test_golden_lab_report_validates() -> None:
     assert len(result.notes) == 1
     note = result.notes[0]
     assert note.type == NoteType.LAB_REPORT
-    assert note.diagnoses[0].code == "J30.1"
-    assert note.diagnoses[0].citation is not None
+    expected = MedicalNote.model_validate(data)
+    assert note.model_dump(exclude=_NOTE_EXCLUDE) == expected.model_dump(exclude=_NOTE_EXCLUDE)
 
 
 # ---------------------------------------------------------------------------
@@ -114,10 +124,11 @@ def test_golden_medications_validate() -> None:
 
     extract_medications(doc, _mock_adapter(data), result)
 
-    assert len(result.medications) == 2
-    assert result.medications[0].name == "Lansoprazole"
-    assert result.medications[0].citation is not None
-    assert result.medications[1].name == "Cetirizine"
+    assert isinstance(data, list)
+    assert len(result.medications) == len(data)
+    for actual, raw in zip(result.medications, data):
+        expected = Medication.model_validate(raw).model_dump(exclude=_ID_EXCLUDE)
+        assert actual.model_dump(exclude=_ID_EXCLUDE) == expected
 
 
 # ---------------------------------------------------------------------------
@@ -132,9 +143,11 @@ def test_golden_contacts_validate() -> None:
 
     extract_contacts(doc, _mock_adapter(data), result)
 
-    assert len(result.contacts) == 1
-    assert result.contacts[0].name == "Institute of Preventative Medicine"
-    assert result.contacts[0].is_clinic is True
+    assert isinstance(data, list)
+    assert len(result.contacts) == len(data)
+    for actual, raw in zip(result.contacts, data):
+        expected = Contact.model_validate(raw).model_dump(exclude=_ID_EXCLUDE)
+        assert actual.model_dump(exclude=_ID_EXCLUDE) == expected
 
 
 # ---------------------------------------------------------------------------
@@ -149,44 +162,44 @@ def test_golden_appointments_validate() -> None:
 
     extract_appointments(doc, _mock_adapter(data), result)
 
-    assert len(result.appointments) == 1
-    assert str(result.appointments[0].date) == "2022-03-10"
-    assert result.appointments[0].status.value == "upcoming"
+    assert isinstance(data, list)
+    assert len(result.appointments) == len(data)
+    for actual, raw in zip(result.appointments, data):
+        expected = Appointment.model_validate(raw).model_dump(exclude=_ID_EXCLUDE)
+        assert actual.model_dump(exclude=_ID_EXCLUDE) == expected
 
 
 # ---------------------------------------------------------------------------
-# Schema-contract tests (breaking-change gate)
+# Schema-contract tests — auto-discover golden files (P1-13)
+# Breaking-change gate: model_validate fails if required field removed/renamed.
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize(
-    "golden_file",
-    ["outpatient_note.json", "discharge_note.json", "lab_report_note.json"],
-)
-def test_golden_medical_note_schema_contract(golden_file: str) -> None:
-    data = _load(golden_file)
+@pytest.mark.parametrize("golden_path", _NOTE_FILES, ids=lambda p: p.name)
+def test_golden_medical_note_schema_contract(golden_path: Path) -> None:
+    data = json.loads(golden_path.read_text())
     MedicalNote.model_validate(data)
 
 
-@pytest.mark.parametrize("golden_file", ["medications.json"])
-def test_golden_medication_schema_contract(golden_file: str) -> None:
-    data = _load(golden_file)
+@pytest.mark.parametrize("golden_path", _MEDICATION_FILES, ids=lambda p: p.name)
+def test_golden_medication_schema_contract(golden_path: Path) -> None:
+    data = json.loads(golden_path.read_text())
     assert isinstance(data, list)
     for item in data:
         Medication.model_validate(item)
 
 
-@pytest.mark.parametrize("golden_file", ["contacts.json"])
-def test_golden_contact_schema_contract(golden_file: str) -> None:
-    data = _load(golden_file)
+@pytest.mark.parametrize("golden_path", _CONTACT_FILES, ids=lambda p: p.name)
+def test_golden_contact_schema_contract(golden_path: Path) -> None:
+    data = json.loads(golden_path.read_text())
     assert isinstance(data, list)
     for item in data:
         Contact.model_validate(item)
 
 
-@pytest.mark.parametrize("golden_file", ["appointments.json"])
-def test_golden_appointment_schema_contract(golden_file: str) -> None:
-    data = _load(golden_file)
+@pytest.mark.parametrize("golden_path", _APPOINTMENT_FILES, ids=lambda p: p.name)
+def test_golden_appointment_schema_contract(golden_path: Path) -> None:
+    data = json.loads(golden_path.read_text())
     assert isinstance(data, list)
     for item in data:
         Appointment.model_validate(item)
