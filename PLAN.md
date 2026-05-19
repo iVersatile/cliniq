@@ -78,12 +78,12 @@
 - [x] `P1-06` — Test all prompts against Claude API (fastest feedback loop; not the shipping backend)
 - [x] `P1-07` — Add source-sentence citation field to medication + diagnosis extraction
 - [x] `P1-08` — `tests/test_prompts.py`: golden-file tests — run prompt on fixture text, assert schema validates + key fields match ground truth
-- [ ] `P1-09` — [CRITICAL] Add per-item skip tests for list extractors: `contact`, `appointment`, `medication` — mixed valid+invalid list → invalid skipped, warning logged
-- [ ] `P1-10` — [HIGH] Strengthen golden-file assertions to full `model_dump()` roundtrip (not field-by-field) in `tests/test_golden.py`
-- [ ] `P1-11` — [HIGH] Add type annotations to `extract_all()` in `src/cliniq/extraction/prompts/__init__.py`
-- [ ] `P1-12` — [MEDIUM] Tighten exception tuples in `appointment.py`, `contact.py`, `medication.py` to only catch exceptions that can actually be raised at each call site
-- [ ] `P1-13` — [MEDIUM] Replace single-element `@pytest.mark.parametrize` lists in `test_golden.py` schema-contract tests with glob-based auto-discovery
-- [ ] `P1-14` — [LOW] Rename `extract_medical_note()` → `extract_outpatient_note()` or add clarifying comment — name currently implies all note types but only calls outpatient variant
+- [x] `P1-09` — [CRITICAL] Add per-item skip tests for list extractors: `contact`, `appointment`, `medication` — mixed valid+invalid list → invalid skipped, warning logged
+- [x] `P1-10` — [HIGH] Strengthen golden-file assertions to full `model_dump()` roundtrip (not field-by-field) in `tests/test_golden.py`
+- [x] `P1-11` — [HIGH] Add type annotations to `extract_all()` in `src/cliniq/extraction/prompts/__init__.py`
+- [x] `P1-12` — [MEDIUM] Tighten exception tuples in `appointment.py`, `contact.py`, `medication.py` to only catch exceptions that can actually be raised at each call site
+- [x] `P1-13` — [MEDIUM] Replace single-element `@pytest.mark.parametrize` lists in `test_golden.py` schema-contract tests with glob-based auto-discovery
+- [x] `P1-14` — [LOW] Rename `extract_medical_note()` → `extract_outpatient_note()` or add clarifying comment — name currently implies all note types but only calls outpatient variant
 
 ### Acceptance Criteria
 
@@ -98,8 +98,8 @@
 
 - [x] All task checkboxes in this phase are checked
 - [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
-- [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
-- [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
+- [x] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
+- [x] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [ ] Schemas declared frozen — no breaking changes without explicit version bump
 - [ ] No PHI, real names, NHS numbers, or API keys in any committed file or CI log
 - [ ] `PLAN.md` task checkboxes updated to reflect actual state
