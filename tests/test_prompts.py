@@ -10,7 +10,10 @@ from cliniq.extraction.engine import ExtractionResult
 from cliniq.extraction.prompts import extract_all
 from cliniq.extraction.prompts.appointment import extract_appointments
 from cliniq.extraction.prompts.contact import extract_contacts
-from cliniq.extraction.prompts.medical_note import extract_medical_note
+from cliniq.extraction.prompts.medical_note import (
+    extract_medical_note,
+    extract_medical_note_discharge,
+)
 from cliniq.extraction.prompts.medication import extract_medications
 from cliniq.ingestion.pdf_reader import DocumentText, PageText
 
@@ -82,6 +85,43 @@ def test_extract_medical_note_outpatient_bad_response_logs_warning(caplog: Magic
 
     with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.medical_note"):
         extract_medical_note(doc, adapter, result)
+
+    assert result.notes == []
+    assert any("parse failed" in r.message for r in caplog.records)
+
+
+def test_extract_medical_note_discharge_appends_note() -> None:
+    """Adapter returns valid discharge summary dict → note appended with discharge_summary type."""
+    doc = _make_doc("Discharge summary: Patient admitted with NSTEMI, discharged day 4.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = {
+        "date": "2025-04-10",
+        "source_file": "",
+        "type": "discharge_summary",
+        "summary": "Patient admitted with NSTEMI, discharged after 4 days.",
+        "diagnoses": [{"code": "I21.4", "system": "ICD-10", "label": "NSTEMI"}],
+        "sections": {"discharge_plan": "Dual antiplatelet therapy for 12 months."},
+    }
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    extract_medical_note_discharge(doc, adapter, result)
+
+    assert len(result.notes) == 1
+    note = result.notes[0]
+    assert note.type.value == "discharge_summary"
+    assert note.diagnoses[0].code == "I21.4"
+    adapter.complete_json.assert_called_once()
+
+
+def test_extract_medical_note_discharge_bad_response_logs_warning(caplog: MagicMock) -> None:
+    """Adapter returns unparseable dict → no note appended, warning logged."""
+    doc = _make_doc("Some discharge text.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = {"bad": "payload"}
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.medical_note"):
+        extract_medical_note_discharge(doc, adapter, result)
 
     assert result.notes == []
     assert any("parse failed" in r.message for r in caplog.records)

@@ -52,6 +52,45 @@ def extract_medical_note_outpatient(
         log.warning("extract_medical_note_outpatient: parse failed (%s)", exc)
 
 
+_SYSTEM_DISCHARGE = """\
+You are a clinical record parser specialising in hospital discharge summaries.
+Extract structured data from the document below and return a single JSON object.
+
+Rules:
+- Return JSON only — no prose, no markdown fences.
+- Never hallucinate. If a field is absent from the text, use null or omit it.
+- `type` must be "discharge_summary".
+- `diagnoses`: array of {code, system, label}. List primary diagnosis first, then secondary. \
+Use ICD-10 codes where determinable; otherwise set system to "other".
+- `sections`: object mapping section headings (lower_snake_case) to their text content.
+  Common headings: presenting_complaint, past_medical_history, investigations,
+  procedures, discharge_medications, discharge_plan, follow_up.
+- `summary`: one sentence capturing the primary reason for admission and outcome.
+- `date`: ISO 8601 discharge date (YYYY-MM-DD), if present.
+- `source_file`: leave as empty string — caller will populate.
+"""
+
+
+def extract_medical_note_discharge(
+    doc: DocumentText,
+    adapter: LLMAdapter,
+    result: ExtractionResult,
+) -> None:
+    schema = MedicalNote.model_json_schema()
+    try:
+        raw = adapter.complete_json(
+            system=_SYSTEM_DISCHARGE,
+            user=doc.full_text,
+            schema=schema,
+        )
+        raw.setdefault("source_file", str(doc.source_file))
+        raw["type"] = NoteType.DISCHARGE_SUMMARY
+        note = MedicalNote.model_validate(raw)
+        result.notes.append(note)
+    except (ValidationError, ValueError, KeyError) as exc:
+        log.warning("extract_medical_note_discharge: parse failed (%s)", exc)
+
+
 def extract_medical_note(
     doc: DocumentText,
     adapter: LLMAdapter,
