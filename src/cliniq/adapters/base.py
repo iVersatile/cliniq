@@ -12,5 +12,5 @@ class LLMAdapter(ABC):
         """Send a prompt and return the raw text response."""
 
     @abstractmethod
-    def complete_json(self, system: str, user: str, schema: dict[str, Any]) -> dict[str, Any]:
+    def complete_json(self, system: str, user: str, schema: dict[str, Any]) -> Any:
         """Send a prompt and return a validated JSON response matching schema."""

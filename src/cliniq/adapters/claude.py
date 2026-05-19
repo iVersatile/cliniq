@@ -1,49 +1,51 @@
-"""Ollama adapter — default local backend (CPU-only)."""
+"""Anthropic Claude adapter."""
 
 from __future__ import annotations
 
 import json
+import os
 from typing import Any
-
-import httpx
 
 from cliniq.adapters.base import LLMAdapter
 
-_DEFAULT_MODEL = "phi3:mini"
-_DEFAULT_BASE_URL = "http://localhost:11434"
+_DEFAULT_MODEL = "claude-haiku-4-5-20251001"
+_MAX_TOKENS = 4096
 
 
-class OllamaAdapter(LLMAdapter):
-    def __init__(self, model: str = _DEFAULT_MODEL, base_url: str = _DEFAULT_BASE_URL) -> None:
+class ClaudeAdapter(LLMAdapter):
+    def __init__(self, model: str = _DEFAULT_MODEL, api_key: str | None = None) -> None:
+        try:
+            import anthropic
+        except ImportError as exc:
+            raise ImportError(
+                "anthropic package required: uv pip install 'cliniq[claude]'"
+            ) from exc
+        key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
+        self._client = anthropic.Anthropic(api_key=key)
         self.model = model
-        self.base_url = base_url
 
     def complete(self, system: str, user: str) -> str:
-        response = httpx.post(
-            f"{self.base_url}/api/chat",
-            json={
-                "model": self.model,
-                "messages": [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": user},
-                ],
-                "stream": False,
-            },
-            timeout=120,
+        import anthropic
+
+        message = self._client.messages.create(
+            model=self.model,
+            max_tokens=_MAX_TOKENS,
+            system=system,
+            messages=[{"role": "user", "content": user}],
         )
-        response.raise_for_status()
-        return str(response.json()["message"]["content"])
+        block = message.content[0]
+        if not isinstance(block, anthropic.types.TextBlock):
+            raise ValueError(f"unexpected content block type: {type(block)}")
+        return str(block.text)
 
     def complete_json(self, system: str, user: str, schema: dict[str, Any]) -> Any:
         schema_str = json.dumps(schema, indent=2)
         prompt = f"{user}\n\nRespond with valid JSON matching this schema:\n{schema_str}"
         raw = self.complete(system=system, user=prompt)
-        # strip markdown fences
         stripped = raw.strip()
         if stripped.startswith("```"):
             lines = stripped.splitlines()
             stripped = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
-        # find outermost JSON structure (object or array)
         obj_start = stripped.find("{")
         arr_start = stripped.find("[")
         if obj_start == -1 and arr_start == -1:
