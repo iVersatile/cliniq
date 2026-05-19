@@ -163,3 +163,112 @@ def test_extract_medical_note_lab_report_bad_response_logs_warning(caplog: Magic
 
     assert result.notes == []
     assert any("parse failed" in r.message for r in caplog.records)
+
+
+# ---------------------------------------------------------------------------
+# Medication
+# ---------------------------------------------------------------------------
+
+
+def test_extract_medications_appends_items() -> None:
+    """Adapter returns valid medication list → all items appended to result."""
+    doc = _make_doc("Amlodipine 5 mg once daily. Ramipril 10 mg once daily.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = [
+        {"name": "Amlodipine", "dose": "5 mg", "frequency": "once daily"},
+        {"name": "Ramipril", "dose": "10 mg", "frequency": "once daily"},
+    ]
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    extract_medications(doc, adapter, result)
+
+    assert len(result.medications) == 2
+    assert result.medications[0].name == "Amlodipine"
+    assert result.medications[1].name == "Ramipril"
+    adapter.complete_json.assert_called_once()
+
+
+def test_extract_medications_bad_response_logs_warning(caplog: MagicMock) -> None:
+    """Adapter returns non-list → no items appended, warning logged."""
+    doc = _make_doc("Some medication text.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = {"bad": "payload"}
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.medication"):
+        extract_medications(doc, adapter, result)
+
+    assert result.medications == []
+    assert any("parse failed" in r.message for r in caplog.records)
+
+
+# ---------------------------------------------------------------------------
+# Contact
+# ---------------------------------------------------------------------------
+
+
+def test_extract_contacts_appends_items() -> None:
+    """Adapter returns valid contact list → all items appended to result."""
+    doc = _make_doc("Royal Free Hospital Cardiology Clinic, Pond Street, London NW3 2QG.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = [
+        {"name": "Royal Free Hospital", "speciality": "Cardiology", "is_clinic": True},
+    ]
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    extract_contacts(doc, adapter, result)
+
+    assert len(result.contacts) == 1
+    assert result.contacts[0].name == "Royal Free Hospital"
+    assert result.contacts[0].is_clinic is True
+    adapter.complete_json.assert_called_once()
+
+
+def test_extract_contacts_bad_response_logs_warning(caplog: MagicMock) -> None:
+    """Adapter returns non-list → no items appended, warning logged."""
+    doc = _make_doc("Some contact text.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = {"bad": "payload"}
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.contact"):
+        extract_contacts(doc, adapter, result)
+
+    assert result.contacts == []
+    assert any("parse failed" in r.message for r in caplog.records)
+
+
+# ---------------------------------------------------------------------------
+# Appointment
+# ---------------------------------------------------------------------------
+
+
+def test_extract_appointments_appends_items() -> None:
+    """Adapter returns valid appointment list → all items appended to result."""
+    doc = _make_doc("Please attend cardiology outpatients on 12 June 2025 for BP review.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = [
+        {"date": "2025-06-12", "reason": "BP review", "status": "upcoming"},
+    ]
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    extract_appointments(doc, adapter, result)
+
+    assert len(result.appointments) == 1
+    assert str(result.appointments[0].date) == "2025-06-12"
+    assert result.appointments[0].status.value == "upcoming"
+    adapter.complete_json.assert_called_once()
+
+
+def test_extract_appointments_bad_response_logs_warning(caplog: MagicMock) -> None:
+    """Adapter returns non-list → no items appended, warning logged."""
+    doc = _make_doc("Some appointment text.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = {"bad": "payload"}
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.appointment"):
+        extract_appointments(doc, adapter, result)
+
+    assert result.appointments == []
+    assert any("parse failed" in r.message for r in caplog.records)
