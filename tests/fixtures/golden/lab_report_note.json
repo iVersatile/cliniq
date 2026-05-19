@@ -1,0 +1,19 @@
+{
+  "date": "2021-02-15",
+  "source_file": "allergy_isac_001_mock.pdf",
+  "type": "lab_report",
+  "summary": "ISAC allergy panel for Jane Smith showing positive IgE results; no critical values.",
+  "diagnoses": [
+    {
+      "code": "J30.1",
+      "system": "ICD-10",
+      "label": "Allergic rhinitis due to pollen",
+      "citation": "Positive IgE consistent with allergic sensitisation to grass pollen."
+    }
+  ],
+  "sections": {
+    "specimen": "Sample ID 21T880001, collected 15.02.2021.",
+    "results": "Positive IgE results for multiple allergen components.",
+    "interpretation": "Results consistent with polysensitised allergic profile."
+  }
+}

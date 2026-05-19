@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Lansoprazole",
+    "dose": "15 mg",
+    "frequency": "once daily",
+    "citation": "Lansoprazole 15 mg once daily prescribed for gastric protection."
+  },
+  {
+    "name": "Cetirizine",
+    "dose": "10 mg",
+    "frequency": "once daily",
+    "citation": "Cetirizine 10 mg once daily for allergic rhinitis management."
+  }
+]

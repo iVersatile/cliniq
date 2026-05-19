@@ -1,0 +1,18 @@
+{
+  "date": "2021-11-18",
+  "source_file": "ccl_mri_request_001_mock.pdf",
+  "type": "outpatient_letter",
+  "summary": "MRI request for Jane Smith referred by Dr. V. Patel for neurological investigation.",
+  "diagnoses": [
+    {
+      "code": "R51",
+      "system": "ICD-10",
+      "label": "Headache",
+      "citation": "Clinical indication: Headache and dizziness, query intracranial pathology."
+    }
+  ],
+  "sections": {
+    "clinical_information": "Headache and dizziness, query intracranial pathology.",
+    "assessment": "MRI head and cervical spine requested."
+  }
+}

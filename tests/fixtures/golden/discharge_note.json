@@ -1,0 +1,18 @@
+{
+  "date": "2021-12-10",
+  "source_file": "iofpm_healthcheck_001_mock.pdf",
+  "type": "discharge_summary",
+  "summary": "Patient discharged following annual health check with no acute findings.",
+  "diagnoses": [
+    {
+      "code": "Z00.0",
+      "system": "ICD-10",
+      "label": "General adult medical examination",
+      "citation": "Annual health check completed; no acute pathology identified."
+    }
+  ],
+  "sections": {
+    "presenting_complaint": "Routine annual health check.",
+    "discharge_plan": "Continue current medications; repeat health check in 12 months."
+  }
+}
