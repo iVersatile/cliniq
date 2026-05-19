@@ -84,19 +84,30 @@ def check_cli_help() -> None:
 # ---------------------------------------------------------------------------
 
 
+class _DebugLogger:
+    """Context manager: attaches handler + forces DEBUG, then restores state."""
+
+    def __init__(self, logger: logging.Logger, handler: logging.Handler) -> None:
+        self._logger = logger
+        self._handler = handler
+        self._old_level = logging.NOTSET
+
+    def __enter__(self) -> None:
+        self._old_level = self._logger.level
+        self._logger.setLevel(logging.DEBUG)
+        self._logger.addHandler(self._handler)
+
+    def __exit__(self, *_: object) -> None:
+        self._logger.removeHandler(self._handler)
+        self._logger.setLevel(self._old_level)
+
+
 def _run_ingestion(pdf: Path, handler: _ListHandler) -> tuple[int, int]:
     """Return (total_pages, ocr_pages). Raises on failure."""
     from cliniq.ingestion.pdf_reader import read_pdf
 
-    root_logger = logging.getLogger("cliniq")
-    root_logger.addHandler(handler)
-    old_level = root_logger.level
-    root_logger.setLevel(logging.DEBUG)
-    try:
+    with _DebugLogger(logging.getLogger("cliniq"), handler):
         doc = read_pdf(pdf)
-    finally:
-        root_logger.removeHandler(handler)
-        root_logger.setLevel(old_level)
 
     total = len(doc.pages)
     ocr = sum(1 for p in doc.pages if p.via_ocr)
