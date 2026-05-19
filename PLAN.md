@@ -74,8 +74,8 @@
 - [x] `P1-02` — Write extraction prompt for `medical_note` (outpatient letter template)
 - [x] `P1-03` — Write extraction prompt for `medical_note` (discharge summary template)
 - [x] `P1-04` — Write extraction prompt for `medical_note` (lab report template)
-- [ ] `P1-05` — Write extraction prompt for `medication` + `contact` + `appointment` ← in progress
-- [ ] `P1-06` — Test all prompts against Claude API (fastest feedback loop; not the shipping backend)
+- [x] `P1-05` — Write extraction prompt for `medication` + `contact` + `appointment`
+- [ ] `P1-06` — Test all prompts against Claude API (fastest feedback loop; not the shipping backend) ← in progress
 - [ ] `P1-07` — Add source-sentence citation field to medication + diagnosis extraction
 - [ ] `P1-08` — `tests/test_prompts.py`: golden-file tests — run prompt on fixture text, assert schema validates + key fields match ground truth
 
