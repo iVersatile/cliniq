@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import TYPE_CHECKING
 
 from pydantic import ValidationError
@@ -13,6 +14,28 @@ if TYPE_CHECKING:
     from cliniq.extraction.engine import ExtractionResult
 
 log = logging.getLogger(__name__)
+
+_LAB_PATTERNS = re.compile(
+    r"lab(?:oratory)?\s+report|specimen|reference\s+range|"
+    r"haematology|biochemistry|microbiology|pathology\s+report|"
+    r"serology|immunology\s+result",
+    re.IGNORECASE,
+)
+_DISCHARGE_PATTERNS = re.compile(
+    r"discharge\s+summary|date\s+of\s+discharge|date\s+of\s+admission|"
+    r"admission\s+date|inpatient|was\s+admitted|discharged\s+(?:on|home|to)",
+    re.IGNORECASE,
+)
+
+
+def classify_note_type(text: str) -> NoteType:
+    """Heuristic classification — cheaper than a classifier LLM call."""
+    if _LAB_PATTERNS.search(text):
+        return NoteType.LAB_REPORT
+    if _DISCHARGE_PATTERNS.search(text):
+        return NoteType.DISCHARGE_SUMMARY
+    return NoteType.OUTPATIENT_LETTER
+
 
 _SYSTEM_OUTPATIENT = """\
 You are a clinical record parser specialising in outpatient correspondence.

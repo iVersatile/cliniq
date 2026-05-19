@@ -21,6 +21,7 @@ from cliniq.ingestion.pdf_reader import DocumentText, PageText
 
 def _stub_args() -> tuple[MagicMock, MagicMock, MagicMock]:
     doc = MagicMock()
+    doc.full_text = ""
     adapter = MagicMock()
     result = MagicMock()
     return doc, adapter, result
