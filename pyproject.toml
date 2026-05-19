@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cliniq"
+version = "0.1.0"
+description = "Offline-first health record extraction — PDF → structured JSON + Markdown"
+requires-python = ">=3.11"
+dependencies = [
+    "pdfplumber>=0.11",
+    "pytesseract>=0.3.13",
+    "Pillow>=10.0",
+    "pydantic>=2.0",
+    "httpx>=0.27",
+    "click>=8.1",
+    "mcp>=1.0",
+]
+
+[project.scripts]
+cliniq = "cliniq.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cliniq"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=cliniq --cov-report=term-missing"
