@@ -100,10 +100,10 @@
 - [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [x] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [x] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
-- [ ] Schemas declared frozen — no breaking changes without explicit version bump
-- [ ] No PHI, real names, NHS numbers, or API keys in any committed file or CI log
-- [ ] `PLAN.md` task checkboxes updated to reflect actual state
-- [ ] **Human approval received before phase is marked complete**
+- [x] Schemas declared frozen — no breaking changes without explicit version bump
+- [x] No PHI, real names, NHS numbers, or API keys in any committed file or CI log
+- [x] `PLAN.md` task checkboxes updated to reflect actual state
+- [x] **Human approval received before phase is marked complete**
 
 ---
 
@@ -113,7 +113,7 @@
 
 ### Tasks
 
-- [ ] `P2-01` — Implement `OllamaAdapter.complete_json()` with JSON extraction fallback (find `{...}` in response)
+- [ ] `P2-01` — Implement `OllamaAdapter.complete_json()` with JSON extraction fallback (find `{...}` in response) ← **in progress**
 - [ ] `P2-02` — Wire `ExtractionEngine` prompts → adapter → schema validation
 - [ ] `P2-03` — Implement `json_writer.py` and `markdown_writer.py` (currently stubs)
 - [ ] `P2-04` — Implement `cli.py extract` command with per-file progress output
