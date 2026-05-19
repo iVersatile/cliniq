@@ -35,6 +35,7 @@
 - [x] `P0-05` — Build initial test corpus: 5 born-digital + 5 scanned (anonymised via presidio or synthetic via Faker+reportlab)
 - [x] `P0-06` — Write ground-truth JSON for all 10 corpus docs
 - [x] `P0-07` — `tests/test_ingestion.py`: parametrised tests against corpus; assert text non-empty + flag correctness
+- [x] `P0-08` — Image preprocessing pipeline before Tesseract: grayscale conversion, contrast enhancement, sharpening, binarisation (Otsu threshold); exposed as `preprocess_image()` in `cliniq/ingestion/preprocessing.py`
 
 ### Acceptance Criteria
 
@@ -45,6 +46,7 @@
 - [x] All 10 corpus PDFs have corresponding ground-truth JSON in `test_corpus/*/ground_truth/`
 - [x] `pytest tests/test_ingestion.py` passes parametrised against all 10 corpus docs with zero failures
 - [x] No corpus PDF causes an unhandled exception
+- [x] `preprocess_image()` improves or maintains Tesseract confidence vs. raw image on scanned corpus (mean conf delta >= 0)
 
 ### Definition of Done
 
