@@ -76,8 +76,8 @@
 - [x] `P1-04` — Write extraction prompt for `medical_note` (lab report template)
 - [x] `P1-05` — Write extraction prompt for `medication` + `contact` + `appointment`
 - [x] `P1-06` — Test all prompts against Claude API (fastest feedback loop; not the shipping backend)
-- [ ] `P1-07` — Add source-sentence citation field to medication + diagnosis extraction ← in progress
-- [ ] `P1-08` — `tests/test_prompts.py`: golden-file tests — run prompt on fixture text, assert schema validates + key fields match ground truth
+- [x] `P1-07` — Add source-sentence citation field to medication + diagnosis extraction
+- [ ] `P1-08` — `tests/test_prompts.py`: golden-file tests — run prompt on fixture text, assert schema validates + key fields match ground truth ← in progress
 
 ### Acceptance Criteria
 
