@@ -36,6 +36,7 @@
 - [x] `P0-06` — Write ground-truth JSON for all 10 corpus docs
 - [x] `P0-07` — `tests/test_ingestion.py`: parametrised tests against corpus; assert text non-empty + flag correctness
 - [x] `P0-08` — Image preprocessing pipeline before Tesseract: grayscale conversion, contrast enhancement, sharpening, binarisation (Otsu threshold); exposed as `preprocess_image()` in `cliniq/ingestion/preprocessing.py`
+- [ ] `P0-09` — Add structured logging to ingestion pipeline: log per-page OCR fallback decisions, Tesseract mean confidence scores, and any caught exceptions using Python `logging` module; no `print()` statements anywhere in `src/cliniq/ingestion/`
 
 ### Acceptance Criteria
 
@@ -47,16 +48,17 @@
 - [x] `pytest tests/test_ingestion.py` passes parametrised against all 10 corpus docs with zero failures
 - [x] No corpus PDF causes an unhandled exception
 - [x] `preprocess_image()` improves or maintains Tesseract confidence vs. raw image on scanned corpus (mean conf delta >= 0)
+- [ ] Ingestion pipeline emits `logging.DEBUG` records for OCR fallback decisions and confidence scores; no `print()` in `src/cliniq/ingestion/`
 
 ### Definition of Done
 
-- [x] All task checkboxes in this phase are checked
+- [ ] All task checkboxes in this phase are checked
 - [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [x] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [x] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [x] No PHI, real names, NHS numbers, or API keys in any committed file or CI log
 - [x] `PLAN.md` task checkboxes updated to reflect actual state
-- [x] **Human approval received before phase is marked complete**
+- [ ] **Human approval received before phase is marked complete**
 
 ---
 
@@ -362,6 +364,7 @@
 | PDF format variation across NHS trusts | P4 | Corpus must include docs from ≥ 3 different trusts |
 | Tesseract install friction on Windows | P6 | Bundle Tesseract binary in installer |
 | LLM hallucinates medication dose | P1–P4 | Source-sentence citation mandatory per field; confidence flag |
+| **Gap: pages with text layer + embedded images silently drop image content** | P0–P4 | `read_pdf()` uses pdfplumber text layer when present and skips raster images on the same page (e.g. header logos, scan inserts, chart images). Options to close: (a) extract `page.images` separately via pdfplumber and pass each image region through `ocr_page()` alongside the text layer; (b) replace pdfplumber extraction with Docling or Marker for full hybrid text+image extraction; (c) post-process with a vision model on image regions after text extraction. Deferring to Phase 4 QA unless a P1 fixture reveals extraction failures caused by this gap. |
 
 ---
 

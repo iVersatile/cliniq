@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import pdfplumber
+
+log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -29,14 +32,19 @@ class DocumentText:
 
 def read_pdf(path: Path) -> DocumentText:
     """Extract text from a PDF, falling back to OCR for image-only pages."""
+    log.debug("read_pdf: opening %s", path)
     doc = DocumentText(source_file=path)
     with pdfplumber.open(path) as pdf:
+        total = len(pdf.pages)
         for i, page in enumerate(pdf.pages, start=1):
             text = page.extract_text() or ""
             if text.strip():
+                log.debug("read_pdf: p%d/%d text-layer (%d chars)", i, total, len(text))
                 doc.pages.append(PageText(page_number=i, text=text, via_ocr=False))
             else:
+                log.debug("read_pdf: p%d/%d no text layer — falling back to OCR", i, total)
                 from cliniq.ingestion.ocr import ocr_page
 
                 doc.pages.append(ocr_page(page, page_number=i))
+    log.debug("read_pdf: done — %d pages", len(doc.pages))
     return doc
