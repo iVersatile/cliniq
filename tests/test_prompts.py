@@ -13,6 +13,7 @@ from cliniq.extraction.prompts.contact import extract_contacts
 from cliniq.extraction.prompts.medical_note import (
     extract_medical_note,
     extract_medical_note_discharge,
+    extract_medical_note_lab_report,
 )
 from cliniq.extraction.prompts.medication import extract_medications
 from cliniq.ingestion.pdf_reader import DocumentText, PageText
@@ -122,6 +123,43 @@ def test_extract_medical_note_discharge_bad_response_logs_warning(caplog: MagicM
 
     with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.medical_note"):
         extract_medical_note_discharge(doc, adapter, result)
+
+    assert result.notes == []
+    assert any("parse failed" in r.message for r in caplog.records)
+
+
+def test_extract_medical_note_lab_report_appends_note() -> None:
+    """Adapter returns valid lab report dict → note appended with lab_report type."""
+    doc = _make_doc("Full blood count: Hb 9.2 g/dL (low). Iron 4 umol/L (low).")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = {
+        "date": "2025-05-01",
+        "source_file": "",
+        "type": "lab_report",
+        "summary": "FBC shows microcytic anaemia consistent with iron deficiency.",
+        "diagnoses": [{"code": "D50.9", "system": "ICD-10", "label": "Iron-deficiency anaemia"}],
+        "sections": {"results": "Hb 9.2 g/dL\nIron 4 umol/L"},
+    }
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    extract_medical_note_lab_report(doc, adapter, result)
+
+    assert len(result.notes) == 1
+    note = result.notes[0]
+    assert note.type.value == "lab_report"
+    assert note.diagnoses[0].code == "D50.9"
+    adapter.complete_json.assert_called_once()
+
+
+def test_extract_medical_note_lab_report_bad_response_logs_warning(caplog: MagicMock) -> None:
+    """Adapter returns unparseable dict → no note appended, warning logged."""
+    doc = _make_doc("Some lab text.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = {"bad": "payload"}
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    with caplog.at_level(logging.WARNING, logger="cliniq.extraction.prompts.medical_note"):
+        extract_medical_note_lab_report(doc, adapter, result)
 
     assert result.notes == []
     assert any("parse failed" in r.message for r in caplog.records)

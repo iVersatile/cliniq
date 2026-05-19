@@ -91,6 +91,47 @@ def extract_medical_note_discharge(
         log.warning("extract_medical_note_discharge: parse failed (%s)", exc)
 
 
+_SYSTEM_LAB_REPORT = """\
+You are a clinical record parser specialising in laboratory reports.
+Extract structured data from the report below and return a single JSON object.
+
+Rules:
+- Return JSON only — no prose, no markdown fences.
+- Never hallucinate. If a field is absent from the text, use null or omit it.
+- `type` must be "lab_report".
+- `diagnoses`: array of {code, system, label}. Only populate when the report explicitly \
+states a diagnosis or interpretation (e.g. "consistent with iron-deficiency anaemia"). \
+Use ICD-10 codes where determinable; otherwise system = "other".
+- `sections`: object mapping section headings (lower_snake_case) to their text content.
+  Common headings: specimen, requested_by, results, reference_ranges, interpretation, comment.
+  Preserve result tables as plain text in the relevant section.
+- `summary`: one sentence naming the test panel and the headline finding (e.g. normal / \
+abnormal / critical value present).
+- `date`: ISO 8601 collection or report date (YYYY-MM-DD), if present.
+- `source_file`: leave as empty string — caller will populate.
+"""
+
+
+def extract_medical_note_lab_report(
+    doc: DocumentText,
+    adapter: LLMAdapter,
+    result: ExtractionResult,
+) -> None:
+    schema = MedicalNote.model_json_schema()
+    try:
+        raw = adapter.complete_json(
+            system=_SYSTEM_LAB_REPORT,
+            user=doc.full_text,
+            schema=schema,
+        )
+        raw.setdefault("source_file", str(doc.source_file))
+        raw["type"] = NoteType.LAB_REPORT
+        note = MedicalNote.model_validate(raw)
+        result.notes.append(note)
+    except (ValidationError, ValueError, KeyError) as exc:
+        log.warning("extract_medical_note_lab_report: parse failed (%s)", exc)
+
+
 def extract_medical_note(
     doc: DocumentText,
     adapter: LLMAdapter,
