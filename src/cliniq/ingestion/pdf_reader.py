@@ -54,6 +54,7 @@ def read_pdf(path: Path) -> DocumentText:
                     doc.pages.append(PageText(page_number=i, text=text, via_ocr=False))
                 else:
                     log.debug("read_pdf: p%d/%d no text layer — falling back to OCR", i, total)
+                    # Late import breaks the circular dependency: ocr imports PageText from here.
                     from cliniq.ingestion.ocr import ocr_page
 
                     doc.pages.append(ocr_page(page, page_number=i))
