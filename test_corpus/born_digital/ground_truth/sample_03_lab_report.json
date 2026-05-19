@@ -1,0 +1,14 @@
+{
+  "source_file": "sample_03_lab_report.pdf",
+  "page_count": 1,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 580,
+      "text_nonempty": true
+    }
+  ]
+}

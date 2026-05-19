@@ -1,0 +1,14 @@
+{
+  "source_file": "sample_05_clinic_letter.pdf",
+  "page_count": 1,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": false,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 662,
+      "text_nonempty": true
+    }
+  ]
+}

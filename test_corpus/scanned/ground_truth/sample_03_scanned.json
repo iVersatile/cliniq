@@ -1,0 +1,14 @@
+{
+  "source_file": "sample_03_scanned.pdf",
+  "page_count": 1,
+  "pages": [
+    {
+      "page_number": 1,
+      "via_ocr": true,
+      "low_confidence": false,
+      "is_handwritten": false,
+      "text_length": 249,
+      "text_nonempty": true
+    }
+  ]
+}
