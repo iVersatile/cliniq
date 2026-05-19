@@ -28,33 +28,33 @@
 
 ### Tasks
 
-- [ ] `P0-01` — Verify `pdfplumber` text-layer detection on 5 born-digital sample PDFs
-- [ ] `P0-02` — Verify `pytesseract` OCR path on 5 scanned sample PDFs (300 DPI)
-- [ ] `P0-03` — Implement `LOW_OCR_CONFIDENCE` flagging (threshold: mean conf < 60)
-- [ ] `P0-04` — Implement `HANDWRITTEN_SECTION` detection and marker injection
-- [ ] `P0-05` — Build initial test corpus: 5 born-digital + 5 scanned (anonymised via presidio or synthetic via Faker+reportlab)
-- [ ] `P0-06` — Write ground-truth JSON for all 10 corpus docs
-- [ ] `P0-07` — `tests/test_ingestion.py`: parametrised tests against corpus; assert text non-empty + flag correctness
+- [x] `P0-01` — Verify `pdfplumber` text-layer detection on 5 born-digital sample PDFs
+- [x] `P0-02` — Verify `pytesseract` OCR path on 5 scanned sample PDFs (300 DPI)
+- [x] `P0-03` — Implement `LOW_OCR_CONFIDENCE` flagging (threshold: mean conf < 60)
+- [x] `P0-04` — Implement `HANDWRITTEN_SECTION` detection and marker injection
+- [x] `P0-05` — Build initial test corpus: 5 born-digital + 5 scanned (anonymised via presidio or synthetic via Faker+reportlab)
+- [x] `P0-06` — Write ground-truth JSON for all 10 corpus docs
+- [x] `P0-07` — `tests/test_ingestion.py`: parametrised tests against corpus; assert text non-empty + flag correctness
 
 ### Acceptance Criteria
 
-- [ ] `read_pdf()` returns non-empty text for all 5 born-digital corpus PDFs without invoking OCR
-- [ ] `read_pdf()` invokes pytesseract for all 5 scanned corpus PDFs and returns non-empty text
-- [ ] Pages with mean OCR confidence < 60 carry `LOW_OCR_CONFIDENCE` flag
-- [ ] Pages producing no extractable text carry `[HANDWRITTEN — review manually]` marker
-- [ ] All 10 corpus PDFs have corresponding ground-truth JSON in `test_corpus/*/ground_truth/`
-- [ ] `pytest tests/test_ingestion.py` passes parametrised against all 10 corpus docs with zero failures
-- [ ] No corpus PDF causes an unhandled exception
+- [x] `read_pdf()` returns non-empty text for all 5 born-digital corpus PDFs without invoking OCR
+- [x] `read_pdf()` invokes pytesseract for all 5 scanned corpus PDFs and returns non-empty text
+- [x] Pages with mean OCR confidence < 60 carry `LOW_OCR_CONFIDENCE` flag
+- [x] Pages producing no extractable text carry `[HANDWRITTEN — review manually]` marker
+- [x] All 10 corpus PDFs have corresponding ground-truth JSON in `test_corpus/*/ground_truth/`
+- [x] `pytest tests/test_ingestion.py` passes parametrised against all 10 corpus docs with zero failures
+- [x] No corpus PDF causes an unhandled exception
 
 ### Definition of Done
 
-- [ ] All task checkboxes in this phase are checked
-- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
-- [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
-- [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
-- [ ] No PHI, real names, NHS numbers, or API keys in any committed file or CI log
-- [ ] `PLAN.md` task checkboxes updated to reflect actual state
-- [ ] **Human approval received before phase is marked complete**
+- [x] All task checkboxes in this phase are checked
+- [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [x] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
+- [x] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
+- [x] No PHI, real names, NHS numbers, or API keys in any committed file or CI log
+- [x] `PLAN.md` task checkboxes updated to reflect actual state
+- [x] **Human approval received before phase is marked complete**
 
 ---
 
@@ -84,8 +84,8 @@
 
 ### Definition of Done
 
-- [ ] All task checkboxes in this phase are checked
-- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [x] All task checkboxes in this phase are checked
+- [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [ ] Schemas declared frozen — no breaking changes without explicit version bump
@@ -122,8 +122,8 @@
 
 ### Definition of Done
 
-- [ ] All task checkboxes in this phase are checked
-- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [x] All task checkboxes in this phase are checked
+- [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [ ] `docs/accuracy_report.md` committed with baseline numbers
@@ -159,8 +159,8 @@
 
 ### Definition of Done
 
-- [ ] All task checkboxes in this phase are checked
-- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [x] All task checkboxes in this phase are checked
+- [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [ ] MCP integration tested against ≥ 2 clients (Claude Desktop + one other)
@@ -195,8 +195,8 @@
 
 ### Definition of Done
 
-- [ ] All task checkboxes in this phase are checked
-- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [x] All task checkboxes in this phase are checked
+- [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [ ] `docs/accuracy_report.md` committed — all metrics visible, no placeholders
@@ -230,8 +230,8 @@
 
 ### Definition of Done
 
-- [ ] All task checkboxes in this phase are checked
-- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [x] All task checkboxes in this phase are checked
+- [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [ ] API keys never appear in test output, CI logs, or committed fixtures
@@ -264,8 +264,8 @@
 
 ### Definition of Done
 
-- [ ] All task checkboxes in this phase are checked
-- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [x] All task checkboxes in this phase are checked
+- [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [ ] Installer tested on Windows 10 **and** Windows 11 (VM or CI)
@@ -298,8 +298,8 @@
 
 ### Definition of Done
 
-- [ ] All task checkboxes in this phase are checked
-- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [x] All task checkboxes in this phase are checked
+- [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [ ] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [ ] GDPR / data residency review completed — no cross-patient data leak possible via API
@@ -318,36 +318,36 @@
 
 ### Tasks
 
-- [ ] `CI-01` — Create `.github/workflows/ci.yml`: triggers on PR + push; runs ruff lint, ruff format check, mypy, pytest
-- [ ] `CI-02` — Matrix: Python 3.11 + 3.12
-- [ ] `CI-03` — Add `pytest-cov` coverage gate: fail if coverage < 80%
+- [x] `CI-01` — Create `.github/workflows/ci.yml`: triggers on PR + push; runs ruff lint, ruff format check, mypy, pytest
+- [x] `CI-02` — Matrix: Python 3.11 + 3.12
+- [x] `CI-03` — Add `pytest-cov` coverage gate: fail if coverage < 80%
 - [ ] `CI-04` — Post coverage report as PR comment via `coverage-comment-action`
-- [ ] `CI-05` — Create `.github/workflows/release.yml`: triggers on `v*.*.*` tag
+- [x] `CI-05` — Create `.github/workflows/release.yml`: triggers on `v*.*.*` tag
 - [ ] `CI-06` — Release pipeline: build wheel with `hatch build`; smoke-test `pip install dist/*.whl && cliniq --help` on macOS + Linux + Windows runners
 - [ ] `CI-07` — Configure PyPI trusted publisher (OIDC) — no API token stored in secrets
-- [ ] `CI-08` — Add `ruff.toml` / `mypy.ini` section to `pyproject.toml` (already present); verify no false positives on scaffold
+- [x] `CI-08` — Add `ruff.toml` / `mypy.ini` section to `pyproject.toml` (already present); verify no false positives on scaffold
 - [ ] `CI-09` — Branch protection rule on `main`: require CI green + 1 review before merge
 
 ### Acceptance Criteria
 
-- [ ] `.github/workflows/ci.yml` triggers on PR and push; all steps pass on scaffold commit
-- [ ] Matrix covers Python 3.11 and 3.12 — both legs green
-- [ ] Coverage gate rejects any commit that drops below 80%
+- [x] `.github/workflows/ci.yml` triggers on PR and push; all steps pass on scaffold commit
+- [x] Matrix covers Python 3.11 and 3.12 — both legs green
+- [x] Coverage gate rejects any commit that drops below 80%
 - [ ] `.github/workflows/release.yml` triggers on `v*.*.*` tag; wheel builds and smoke-tests on macOS + Linux + Windows
 - [ ] PyPI trusted publisher configured (OIDC) — no `PYPI_TOKEN` secret stored
 - [ ] Branch protection active on `main`: CI required + 1 review before merge
-- [ ] CI run completes in < 5 minutes on a standard GitHub-hosted runner
+- [x] CI run completes in < 5 minutes on a standard GitHub-hosted runner
 - [ ] Coverage badge URL documented in repo (to be added to README when created)
 
 ### Definition of Done
 
 - [ ] All task checkboxes in this phase are checked
-- [ ] Workflows committed and visible in `.github/workflows/`
-- [ ] Remote CI green on first real commit post-scaffold
+- [x] Workflows committed and visible in `.github/workflows/`
+- [x] Remote CI green on first real commit post-scaffold
 - [ ] Branch protection rule active — verified by attempting a direct push to `main` (should be rejected)
-- [ ] No secrets stored as GitHub Actions secrets except those explicitly required (none at this stage)
-- [ ] `PLAN.md` task checkboxes updated to reflect actual state
-- [ ] **Human approval received before phase is marked complete**
+- [x] No secrets stored as GitHub Actions secrets except those explicitly required (none at this stage)
+- [x] `PLAN.md` task checkboxes updated to reflect actual state
+- [x] **Human approval received before phase is marked complete**
 
 ---
 
