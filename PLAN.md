@@ -113,8 +113,8 @@
 
 ### Tasks
 
-- [ ] `P2-01` — Implement `OllamaAdapter.complete_json()` with JSON extraction fallback (find `{...}` in response) ← **in progress**
-- [ ] `P2-02` — Wire `ExtractionEngine` prompts → adapter → schema validation
+- [x] `P2-01` — Implement `OllamaAdapter.complete_json()` with JSON extraction fallback (find `{...}` in response)
+- [ ] `P2-02` — Wire `ExtractionEngine` prompts → adapter → schema validation ← **in progress**
 - [ ] `P2-03` — Implement `json_writer.py` and `markdown_writer.py` (currently stubs)
 - [ ] `P2-04` — Implement `cli.py extract` command with per-file progress output
 - [ ] `P2-05` — Test Ollama with `phi3:mini` on full corpus; record precision/recall per field
