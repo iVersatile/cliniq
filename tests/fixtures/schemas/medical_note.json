@@ -1,0 +1,19 @@
+{
+  "id": "00000000-0000-0000-0000-000000000001",
+  "date": "2025-03-14",
+  "source_file": "sample_01_outpatient_letter.pdf",
+  "clinic_id": "00000000-0000-0000-0000-000000000002",
+  "clinician_id": "00000000-0000-0000-0000-000000000003",
+  "type": "outpatient_letter",
+  "summary": "Routine cardiology outpatient review.",
+  "diagnoses": [
+    {"code": "I10", "system": "ICD-10", "label": "Essential hypertension"}
+  ],
+  "medication_ids": ["00000000-0000-0000-0000-000000000030"],
+  "next_appointment_id": "00000000-0000-0000-0000-000000000020",
+  "flags": [],
+  "raw_text": "Patient seen in cardiology outpatient clinic.",
+  "sections": {
+    "assessment": "Blood pressure well controlled on current regimen."
+  }
+}

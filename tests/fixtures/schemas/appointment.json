@@ -1,0 +1,9 @@
+{
+  "id": "00000000-0000-0000-0000-000000000020",
+  "date": "2025-06-12",
+  "clinic_id": "00000000-0000-0000-0000-000000000002",
+  "clinician_id": "00000000-0000-0000-0000-000000000003",
+  "reason": "Follow-up blood pressure review",
+  "status": "upcoming",
+  "reminder_at": null
+}
