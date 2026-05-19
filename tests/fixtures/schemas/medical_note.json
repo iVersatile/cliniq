@@ -7,7 +7,7 @@
   "type": "outpatient_letter",
   "summary": "Routine cardiology outpatient review.",
   "diagnoses": [
-    {"code": "I10", "system": "ICD-10", "label": "Essential hypertension"}
+    {"code": "I10", "system": "ICD-10", "label": "Essential hypertension", "citation": null}
   ],
   "medication_ids": ["00000000-0000-0000-0000-000000000030"],
   "next_appointment_id": "00000000-0000-0000-0000-000000000020",

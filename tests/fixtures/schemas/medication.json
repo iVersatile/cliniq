@@ -5,5 +5,6 @@
   "frequency": "once daily",
   "start_date": "2024-11-01",
   "end_date": null,
-  "prescribed_by": "00000000-0000-0000-0000-000000000003"
+  "prescribed_by": "00000000-0000-0000-0000-000000000003",
+  "citation": null
 }

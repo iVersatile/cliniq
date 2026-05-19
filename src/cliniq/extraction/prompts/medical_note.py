@@ -22,8 +22,9 @@ Rules:
 - Return JSON only — no prose, no markdown fences.
 - Never hallucinate. If a field is absent from the text, use null or omit it.
 - `type` must be "outpatient_letter".
-- `diagnoses`: array of {code, system, label}. Use ICD-10 codes where determinable; \
-otherwise set system to "other" and leave code as a short descriptor.
+- `diagnoses`: array of {code, system, label, citation}. Use ICD-10 codes where determinable; \
+otherwise set system to "other" and leave code as a short descriptor. \
+`citation`: verbatim source clause stating this diagnosis, otherwise null.
 - `sections`: object mapping section headings (lower_snake_case) to their text content.
   Common headings: history, examination, investigations, assessment, plan, follow_up.
 - `summary`: one sentence capturing the clinical purpose of the letter.
@@ -60,8 +61,9 @@ Rules:
 - Return JSON only — no prose, no markdown fences.
 - Never hallucinate. If a field is absent from the text, use null or omit it.
 - `type` must be "discharge_summary".
-- `diagnoses`: array of {code, system, label}. List primary diagnosis first, then secondary. \
-Use ICD-10 codes where determinable; otherwise set system to "other".
+- `diagnoses`: array of {code, system, label, citation}. List primary diagnosis first, then \
+secondary. Use ICD-10 codes where determinable; otherwise set system to "other". \
+`citation`: verbatim source clause stating this diagnosis, otherwise null.
 - `sections`: object mapping section headings (lower_snake_case) to their text content.
   Common headings: presenting_complaint, past_medical_history, investigations,
   procedures, discharge_medications, discharge_plan, follow_up.
@@ -99,9 +101,10 @@ Rules:
 - Return JSON only — no prose, no markdown fences.
 - Never hallucinate. If a field is absent from the text, use null or omit it.
 - `type` must be "lab_report".
-- `diagnoses`: array of {code, system, label}. Only populate when the report explicitly \
+- `diagnoses`: array of {code, system, label, citation}. Only populate when the report explicitly \
 states a diagnosis or interpretation (e.g. "consistent with iron-deficiency anaemia"). \
-Use ICD-10 codes where determinable; otherwise system = "other".
+Use ICD-10 codes where determinable; otherwise system = "other". \
+`citation`: verbatim source clause stating this diagnosis, otherwise null.
 - `sections`: object mapping section headings (lower_snake_case) to their text content.
   Common headings: specimen, requested_by, results, reference_ranges, interpretation, comment.
   Preserve result tables as plain text in the relevant section.

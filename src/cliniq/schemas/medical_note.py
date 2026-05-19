@@ -24,6 +24,7 @@ class Diagnosis(BaseModel):
     code: str
     system: Literal["ICD-10", "SNOMED-CT", "other"] = "ICD-10"
     label: str
+    citation: str | None = None
 
 
 class NoteFlag(StrEnum):

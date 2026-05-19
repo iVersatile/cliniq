@@ -27,6 +27,7 @@ Rules:
 - `frequency`: frequency string exactly as written (e.g. "once daily", "BD", "PRN").
 - `start_date`: ISO 8601 date if an initiation date is explicitly stated, otherwise null.
 - `end_date`: ISO 8601 date if a stop date or duration end is explicitly stated, otherwise null.
+- `citation`: verbatim sentence from the source text mentioning this medication, otherwise null.
 - Include medications that were started, continued, changed, or stopped during the encounter.
 - Do not include medications mentioned only as allergies or remote past history.
 """

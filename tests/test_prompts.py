@@ -74,7 +74,35 @@ def test_extract_medical_note_outpatient_appends_note() -> None:
     note = result.notes[0]
     assert note.type.value == "outpatient_letter"
     assert note.diagnoses[0].code == "I10"
+    assert note.diagnoses[0].citation is None
     adapter.complete_json.assert_called_once()
+
+
+def test_extract_medical_note_outpatient_diagnosis_citation_populated() -> None:
+    """When adapter returns diagnosis citation, it is preserved on the Diagnosis object."""
+    doc = _make_doc("Patient has essential hypertension. BP 155/95.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = {
+        "date": "2025-03-14",
+        "source_file": "",
+        "type": "outpatient_letter",
+        "summary": "Cardiology outpatient review.",
+        "diagnoses": [
+            {
+                "code": "I10",
+                "system": "ICD-10",
+                "label": "Hypertension",
+                "citation": "Patient has essential hypertension.",
+            }
+        ],
+        "sections": {},
+    }
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    extract_medical_note(doc, adapter, result)
+
+    assert len(result.notes) == 1
+    assert result.notes[0].diagnoses[0].citation == "Patient has essential hypertension."
 
 
 def test_extract_medical_note_outpatient_bad_response_logs_warning(caplog: MagicMock) -> None:
@@ -186,6 +214,27 @@ def test_extract_medications_appends_items() -> None:
     assert result.medications[0].name == "Amlodipine"
     assert result.medications[1].name == "Ramipril"
     adapter.complete_json.assert_called_once()
+
+
+def test_extract_medications_citation_populated() -> None:
+    """When adapter returns citation text, it is preserved on the Medication object."""
+    doc = _make_doc("Start Amlodipine 5 mg once daily for hypertension management.")
+    adapter = MagicMock()
+    adapter.complete_json.return_value = [
+        {
+            "name": "Amlodipine",
+            "dose": "5 mg",
+            "frequency": "once daily",
+            "citation": "Start Amlodipine 5 mg once daily for hypertension management.",
+        }
+    ]
+    result = ExtractionResult(source=Path("test.pdf"))
+
+    extract_medications(doc, adapter, result)
+
+    expected_citation = "Start Amlodipine 5 mg once daily for hypertension management."
+    assert len(result.medications) == 1
+    assert result.medications[0].citation == expected_citation
 
 
 def test_extract_medications_bad_response_logs_warning(caplog: MagicMock) -> None:
