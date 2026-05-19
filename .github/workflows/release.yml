@@ -35,6 +35,8 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           name: dist
@@ -44,11 +46,35 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install and smoke-test
+      - name: Install Tesseract (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y tesseract-ocr
+
+      - name: Install Tesseract (macOS)
+        if: runner.os == 'macOS'
+        run: brew install tesseract
+
+      - name: Install Tesseract (Windows)
+        if: runner.os == 'Windows'
+        run: choco install tesseract --no-progress -y
+
+      - name: Install wheel
+        shell: bash
+        run: pip install dist/*.whl
+
+      - name: Smoke test — help
+        run: cliniq --help
+
+      - name: Smoke test — ingestion (exercises Tesseract)
         shell: bash
         run: |
-          pip install dist/*.whl
-          cliniq --help
+          python - <<'EOF'
+          from pathlib import Path
+          from cliniq.ingestion.pdf_reader import read_pdf
+          doc = read_pdf(Path("test_corpus/real_world/ccl_mri_request_001_mock.pdf"))
+          assert doc.pages, "read_pdf returned 0 pages"
+          print(f"OK: {doc.source_file.name} — {len(doc.pages)} page(s), via_ocr={doc.pages[0].via_ocr}")
+          EOF
 
   publish:
     needs: smoke-test

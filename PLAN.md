@@ -37,6 +37,7 @@
 - [x] `P0-07` — `tests/test_ingestion.py`: parametrised tests against corpus; assert text non-empty + flag correctness
 - [x] `P0-08` — Image preprocessing pipeline before Tesseract: grayscale conversion, contrast enhancement, sharpening, binarisation (Otsu threshold); exposed as `preprocess_image()` in `cliniq/ingestion/preprocessing.py`
 - [x] `P0-09` — Add structured logging to ingestion pipeline: log per-page OCR fallback decisions, Tesseract mean confidence scores, and any caught exceptions using Python `logging` module; no `print()` statements anywhere in `src/cliniq/ingestion/`
+- [ ] `P0-10` — Fix release smoke-test: install Tesseract on all three OS runners (apt / brew / choco) and upgrade smoke-test from `cliniq --help` to `cliniq extract` on a bundled fixture PDF
 
 ### Acceptance Criteria
 
@@ -52,13 +53,13 @@
 
 ### Definition of Done
 
-- [x] All task checkboxes in this phase are checked
+- [ ] All task checkboxes in this phase are checked
 - [x] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
 - [x] `pytest --cov-fail-under=80` passes; no regressions vs. previous phase
 - [x] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
 - [x] No PHI, real names, NHS numbers, or API keys in any committed file or CI log
 - [x] `PLAN.md` task checkboxes updated to reflect actual state
-- [x] **Human approval received before phase is marked complete**
+- [ ] **Human approval received before phase is marked complete**
 
 ---
 
