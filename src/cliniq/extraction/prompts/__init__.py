@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from cliniq.adapters.base import LLMAdapter
 from cliniq.extraction.prompts.appointment import extract_appointments
+from cliniq.extraction.prompts.condition import extract_conditions
 from cliniq.extraction.prompts.contact import extract_contacts
 from cliniq.extraction.prompts.medical_note import (
     classify_note_type,
@@ -33,6 +34,7 @@ def extract_all(
     extract_contacts(doc, adapter, result)
     extract_medications(doc, adapter, result)
     extract_appointments(doc, adapter, result)
+    extract_conditions(doc, adapter, result)
     note_type = classify_note_type(doc.full_text)
     extractor = _NOTE_EXTRACTORS.get(note_type, extract_outpatient_note)
     extractor(doc, adapter, result)

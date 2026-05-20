@@ -7,7 +7,7 @@ from pathlib import Path
 
 from cliniq.adapters.base import LLMAdapter
 from cliniq.ingestion.pdf_reader import DocumentText, read_pdf
-from cliniq.schemas import Appointment, Contact, MedicalNote, Medication, Symptom
+from cliniq.schemas import Appointment, Condition, Contact, MedicalNote, Medication, Symptom
 
 
 @dataclass
@@ -18,6 +18,7 @@ class ExtractionResult:
     appointments: list[Appointment] = field(default_factory=list)
     medications: list[Medication] = field(default_factory=list)
     symptoms: list[Symptom] = field(default_factory=list)
+    conditions: list[Condition] = field(default_factory=list)
 
     def write(self, output_dir: Path) -> None:
         from cliniq.output.json_writer import write_result

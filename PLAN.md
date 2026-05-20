@@ -121,12 +121,12 @@
 - [ ] `P2-05` — Test Ollama with `phi3:mini` on full corpus; record precision/recall per field
 - [ ] `P2-06` — Tune prompts based on Ollama accuracy results
 - [x] `P2-07` — `tests/test_cli.py`: integration test — run `cliniq extract` on corpus dir; assert output JSON exists + validates
-- [ ] `P2-08` — Add `duration_label: str | None` and `prescribed_by_name: str | None` fields to `src/cliniq/schemas/medication.py`
-- [ ] `P2-09` — Create `src/cliniq/schemas/condition.py`: `ConditionStatus` enum, `ConditionEvent` model, `Condition` model with `history: list[ConditionEvent]` and `linked_medication_ids: list[UUID]`
-- [ ] `P2-10` — Extend extraction prompt in `src/cliniq/extraction/prompts/medical_note.py` to extract `Condition` entities (status, diagnosed_date, last_review_date, history with measurement + notes per event)
-- [ ] `P2-11` — Extend extraction prompt to populate `Medication.duration_label` and `Medication.prescribed_by_name` from document text
-- [ ] `P2-12` — Add `condition.json` output to `json_writer.py`; update `markdown_writer.py` to include conditions section with history table
-- [ ] `P2-13` — Add tests: `tests/test_schemas.py` for `Condition`/`ConditionEvent` round-trip; `tests/fixtures/schemas/condition.json` fixture
+- [x] `P2-08` — Add `duration_label: str | None` and `prescribed_by_name: str | None` fields to `src/cliniq/schemas/medication.py`
+- [x] `P2-09` — Create `src/cliniq/schemas/condition.py`: `ConditionStatus` enum, `ConditionEvent` model, `Condition` model with `history: list[ConditionEvent]` and `linked_medication_ids: list[UUID]`
+- [x] `P2-10` — Extend extraction prompt in `src/cliniq/extraction/prompts/medical_note.py` to extract `Condition` entities (status, diagnosed_date, last_review_date, history with measurement + notes per event)
+- [x] `P2-11` — Extend extraction prompt to populate `Medication.duration_label` and `Medication.prescribed_by_name` from document text
+- [x] `P2-12` — Add `condition.json` output to `json_writer.py`; update `markdown_writer.py` to include conditions section with history table
+- [x] `P2-13` — Add tests: `tests/test_schemas.py` for `Condition`/`ConditionEvent` round-trip; `tests/fixtures/schemas/condition.json` fixture
 
 ### Acceptance Criteria
 

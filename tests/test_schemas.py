@@ -142,7 +142,9 @@ def test_condition_frozen() -> None:
 def test_condition_event_roundtrip() -> None:
     from datetime import date as _date
 
-    event = ConditionEvent(event_date=_date(2023, 6, 1), measurement="LDL 4.2 mmol/L", notes="stable")
+    event = ConditionEvent(
+        event_date=_date(2023, 6, 1), measurement="LDL 4.2 mmol/L", notes="stable"
+    )
     reloaded = ConditionEvent.model_validate(event.model_dump(mode="json"))
     assert reloaded.measurement == "LDL 4.2 mmol/L"
     assert str(reloaded.event_date) == "2023-06-01"

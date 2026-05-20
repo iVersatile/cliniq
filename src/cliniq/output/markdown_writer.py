@@ -25,4 +25,24 @@ def write_markdown(result, output_dir: Path) -> None:  # type: ignore[no-untyped
                 lines.append(f"\n⚠️  {flag.value.replace('_', ' ').title()}")
         lines.append("\n---")
 
+    if result.conditions:
+        lines.append("\n## Conditions\n")
+        for cond in result.conditions:
+            meta: list[str] = [f"**Status:** {cond.status.value}"]
+            if cond.diagnosed_date:
+                meta.append(f"**Diagnosed:** {cond.diagnosed_date}")
+            if cond.last_review_date:
+                meta.append(f"**Last review:** {cond.last_review_date}")
+            lines.append(f"### {cond.name}")
+            lines.append("  ".join(meta))
+            if cond.history:
+                lines.append("\n| Date | Measurement | Notes |")
+                lines.append("| --- | --- | --- |")
+                for ev in cond.history:
+                    date_str = str(ev.event_date) if ev.event_date else ""
+                    meas = ev.measurement or ""
+                    notes = ev.notes or ""
+                    lines.append(f"| {date_str} | {meas} | {notes} |")
+            lines.append("")
+
     (dest / "summary.md").write_text("\n".join(lines))

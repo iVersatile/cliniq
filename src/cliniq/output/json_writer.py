@@ -21,3 +21,4 @@ def write_result(result, output_dir: Path) -> None:  # type: ignore[no-untyped-d
     _dump("appointment", result.appointments)
     _dump("medication", result.medications)
     _dump("symptom", result.symptoms)
+    _dump("condition", result.conditions)
