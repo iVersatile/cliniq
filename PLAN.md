@@ -370,20 +370,20 @@
 
 ### Tasks
 
-- [ ] `PC-01` — `OllamaAdapter`: read `OLLAMA_BASE_URL` env var (default `http://localhost:11434`) — replace hardcoded host
-- [ ] `PC-02` — Write `Dockerfile`: `python:3.11-slim`, `apt-get install tesseract-ocr`, `uv pip install`, `ENTRYPOINT ["cliniq"]`
-- [ ] `PC-03` — Write `docker-compose.yml`: two services — `cliniq` (build: .) + `ollama` (image: `ollama/ollama`); set `OLLAMA_BASE_URL=http://ollama:11434` on cliniq service; mount `./records` volume
-- [ ] `PC-04` — Write `.dockerignore`: exclude `.git`, `samplepdf/`, `test_corpus/`, `__pycache__`, `*.pyc`, `.env*`
-- [ ] `PC-05` — Container smoke test: `docker build -t cliniq . && docker run --rm cliniq cliniq --help` exits 0
-- [ ] `PC-06` — CI: add `docker-build` job to `.github/workflows/ci.yml` — `docker build -t cliniq .` on every PR (no push); required check
-- [ ] `PC-07` — CI: add Docker push to `.github/workflows/release.yml` — on semver tag build + push `ghcr.io/<owner>/cliniq:<tag>` and `ghcr.io/<owner>/cliniq:latest`
-- [ ] `PC-08` — `scripts/local_test.py` check 6: `docker build` + `docker run --help` smoke (skipped gracefully if Docker not available)
+- [x] `PC-01` — `OllamaAdapter`: read `OLLAMA_BASE_URL` env var (default `http://localhost:11434`) — replace hardcoded host
+- [x] `PC-02` — Write `Dockerfile`: `python:3.11-slim`, `apt-get install tesseract-ocr`, `uv pip install`, `ENTRYPOINT ["cliniq"]`
+- [x] `PC-03` — Write `docker-compose.yml`: two services — `cliniq` (build: .) + `ollama` (image: `ollama/ollama`); set `OLLAMA_BASE_URL=http://ollama:11434` on cliniq service; mount `./records` volume
+- [x] `PC-04` — Write `.dockerignore`: exclude `.git`, `samplepdf/`, `test_corpus/`, `__pycache__`, `*.pyc`, `.env*`
+- [x] `PC-05` — Container smoke test: `docker build -t cliniq . && docker run --rm cliniq cliniq --help` exits 0
+- [x] `PC-06` — CI: add `docker-build` job to `.github/workflows/ci.yml` — `docker build -t cliniq .` on every PR (no push); required check
+- [x] `PC-07` — CI: add Docker push to `.github/workflows/release.yml` — on semver tag build + push `ghcr.io/<owner>/cliniq:<tag>` and `ghcr.io/<owner>/cliniq:latest`
+- [x] `PC-08` — `scripts/local_test.py` check 6: `docker build` + `docker run --help` smoke (skipped gracefully if Docker not available)
 
 #### Phase Start Gate — code-review findings (fold in during Phase 8)
 
-- [ ] `PC-09` — [MEDIUM] `OllamaAdapter`: replace per-call `httpx.post()` with persistent `self._client = httpx.Client(timeout=120.0)`; close in `__del__`; fixes connection-pool churn across multi-PDF batches
-- [ ] `PC-10` — [MEDIUM] `cli.py extract`: catch `NotImplementedError` from `get_adapter()` and re-raise as `click.ClickException` with list of valid backends
-- [ ] `PC-11` — [MEDIUM] `OllamaAdapter._extract_json`: add `log.error(...)` on `json.JSONDecodeError` with the malformed substring before re-raising
+- [x] `PC-09` — [MEDIUM] `OllamaAdapter`: replace per-call `httpx.post()` with persistent `self._client = httpx.Client(timeout=120.0)`; close in `__del__`; fixes connection-pool churn across multi-PDF batches
+- [x] `PC-10` — [MEDIUM] `cli.py extract`: catch `NotImplementedError` from `get_adapter()` and re-raise as `click.ClickException` with list of valid backends
+- [x] `PC-11` — [MEDIUM] `OllamaAdapter._extract_json`: add `log.error(...)` on `json.JSONDecodeError` with the malformed substring before re-raising
 - [ ] `PC-12` — [HIGH — deferred to Phase 4] Add retry logic (3 attempts, exponential backoff) to `OllamaAdapter.complete()` and `complete_json()` — deferred until accuracy baseline established in Phase 4
 - [ ] `PC-13` — [HIGH — deferred to Phase 4] Add `OllamaAdapter.health_check()` method; call at CLI startup to surface bad `OLLAMA_BASE_URL` early — deferred to Phase 4
 
