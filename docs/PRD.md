@@ -1,8 +1,8 @@
 # cliniq — Product Requirements Document
 
-**Version:** 1.0  
-**Date:** 2026-05-19  
-**Status:** Locked (derived from Health_Skill_Assessment.md v0.2)
+**Version:** 1.1  
+**Date:** 2026-05-20  
+**Status:** Living document — updated to reflect agent-based orchestration direction (see §2a)
 
 ---
 
@@ -15,6 +15,52 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 ## 2. Product Vision
 
 `cliniq` is a standalone, offline-first Python package that ingests PDF medical records and produces structured, human-readable output — a timeline, contact list, medication log, and appointment history — without any PHI leaving the device.
+
+---
+
+## 2a. Architectural Direction (updated 2026-05-20)
+
+This section records the architectural framing agreed during design review. It does not change v1 scope but governs how future phases are designed.
+
+### OCR as standalone skill
+
+Tesseract/pdfplumber ingestion runs unconditionally as a pre-processing step and produces `DocumentText` (full text + per-page flags). This is a discrete, reusable skill. It does not change in the new architecture.
+
+### Extraction tools replace fixed pipeline
+
+The current `extract_all()` fixed pipeline — which calls `extract_medications()`, `extract_conditions()`, etc. in sequence — is replaced over time by individually invokable extraction tools. Each tool accepts `(doc_text, adapter)` and returns a typed list. An orchestration layer (agent or simple loop) decides which tools to call.
+
+This removes the assumption that every entity is always extracted from every document. An agent can choose to extract only medications from a prescription letter, or only conditions from a discharge summary.
+
+### Bridgeform as extraction tool compiler
+
+The hardcoded per-entity prompt + schema modules (`cliniq/extraction/prompts/medication.py`, etc.) are replaced by Bridgeform, a standalone library that compiles YAML entity specs into LLM prompts, Pydantic schemas, and registered extractor callables. See `docs/BRIDGEFORM_PRD.md` and `docs/BRIDGEFORM_PLAN.md`.
+
+Cliniq ships domain-specific YAML entity specs and consumes Bridgeform as a library. Adding a new entity type requires only a new `.yaml` file — no Python changes.
+
+### Agent orchestration (future)
+
+Phase 3+ (MCP server) exposes extraction tools as MCP-callable tools. A future agentic layer can invoke these tools dynamically based on document type, prior extraction results, or user query. This is not a v1 requirement but the architecture must not preclude it.
+
+### Layered architecture summary
+
+```
+Layer 1 — Ingestion skill (stable):
+  pdfplumber + Tesseract → DocumentText
+
+Layer 2 — Extraction tools (evolving → Bridgeform-driven):
+  extract_medications(doc, adapter) → list[Medication]
+  extract_conditions(doc, adapter)  → list[Condition]
+  ...each tool independently invokable
+
+Layer 3 — Orchestration (current: simple loop; future: agent):
+  decides which tools to call, aggregates results
+
+Layer 4 — Output (stable):
+  JSON + Markdown writers per entity type
+```
+
+---
 
 ---
 
@@ -68,12 +114,14 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 
 | ID | Requirement |
 |----|-------------|
-| FR-2.1 | Extract all five schema types from each document |
+| FR-2.1 | Extract all six schema types from each document |
 | FR-2.2 | Every medication and diagnosis must include a verbatim source sentence for traceability |
 | FR-2.3 | Adapter is config-selectable at runtime (`--backend ollama`) |
 | FR-2.4 | Prompts must instruct the LLM to return null for absent fields, never hallucinate |
 | FR-2.5 | Extract `Condition` entities with `status`, `diagnosed_date`, `last_review_date`, and a `history` list of `ConditionEvent` records (date + measurement + notes) |
 | FR-2.6 | Populate `Medication.duration_label` (human-readable e.g. "for 2 years") and `Medication.prescribed_by_name` (denormalised prescriber name) from document text |
+| FR-2.7 | Each extraction function must be independently invokable as a discrete tool — not only callable via `extract_all()` |
+| FR-2.8 | *(Future — Bridgeform)* Entity types are defined by YAML specs compiled by Bridgeform; hardcoded per-entity prompt modules are migration targets, not the end state |
 
 ### FR-3 Output
 

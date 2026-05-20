@@ -1,8 +1,13 @@
 # cliniq — Delivery Plan
 
-**Version:** 1.0  
-**Date:** 2026-05-19  
-**Ref:** docs/Health_Skill_Assessment.md §7 + docs/PRD.md
+**Version:** 1.1  
+**Date:** 2026-05-20  
+**Ref:** docs/Health_Skill_Assessment.md §7 + docs/PRD.md + docs/BRIDGEFORM_PRD.md
+
+> **Architecture note (2026-05-20):** Phases 0–2 proceed as planned. From Phase 3 onwards the
+> extraction engine transitions to agent-based orchestration with Bridgeform-compiled entity specs
+> replacing hardcoded prompt modules. See `docs/PRD.md §2a` and `docs/BRIDGEFORM_PRD.md` for detail.
+> Phase 2B below captures the transition work before Phase 3 begins.
 
 ---
 
@@ -14,11 +19,12 @@
 | 0-CI | CI/CD Bootstrap | 1 | Green pipeline, coverage gate, release workflow |
 | 1 | Prompt Library + Schemas | 3–4 | Pydantic models; prompts tested against Claude API |
 | 2 | Ollama Adapter + CLI | 5–6 | `cliniq extract` working end-to-end; accuracy baseline |
-| 3 | MCP Server | 7 | `cliniq serve` + Claude Desktop integration test |
-| 4 | QA & Accuracy Tuning | 8–10 | 20+ doc corpus; >= 90% medication precision |
-| 5 | Additional Adapters | 11–13 | Claude / OpenAI / Gemini adapters (parallel) |
-| 6 | Windows Installer | 14 | Zero-install `.exe` for GPs |
-| 7 | GP Persona *(optional)* | 15–19 | Multi-patient index; FHIR R4 |
+| 2B | Extraction Tool Refactor | 6–7 | Per-tool invocability; Bridgeform BF-1/BF-2 integration |
+| 3 | MCP Server | 7–8 | `cliniq serve` + Claude Desktop integration test |
+| 4 | QA & Accuracy Tuning | 9–11 | 20+ doc corpus; >= 90% medication precision |
+| 5 | Additional Adapters | 12–14 | Claude / OpenAI / Gemini adapters (parallel) |
+| 6 | Windows Installer | 15 | Zero-install `.exe` for GPs |
+| 7 | GP Persona *(optional)* | 16–20 | Multi-patient index; FHIR R4 |
 | 8 | Container Deployment | parallel | Docker image; Compose stack; GHCR publish |
 
 ---
@@ -154,7 +160,44 @@
 
 ---
 
-## Phase 3 — MCP Server (Week 7)
+## Phase 2B — Extraction Tool Refactor (Weeks 6–7)
+
+**Goal:** Decouple each extraction function into an independently invokable tool; integrate Bridgeform BF-1/BF-2 so entity specs drive the extraction loop instead of hardcoded modules. Gate for Phase 3 (MCP server needs discrete tools to expose).
+
+**Blocked by:** Bridgeform BF-1 and BF-2 complete; `docs/BRIDGEFORM_PRD.md` Q6 answered.
+
+### Tasks
+
+- [ ] `P2B-01` — Audit `extract_all()` in `src/cliniq/extraction/prompts/__init__.py`: confirm each sub-function has a clean `(doc: DocumentText, adapter: LLMAdapter, result: ExtractionResult) -> None` signature (already true for medication, condition — verify all)
+- [ ] `P2B-02` — Expose each extractor as a named entry in a tool registry dict: `EXTRACTION_TOOLS: dict[str, Callable]` — keyed by entity name, value is the extract function
+- [ ] `P2B-03` — Refactor `extract_all()` to iterate `EXTRACTION_TOOLS` rather than calling each function explicitly
+- [ ] `P2B-04` — Add `--entities` flag to `cliniq extract` CLI: comma-separated list of entity names to extract (default: all); maps to `EXTRACTION_TOOLS` keys
+- [ ] `P2B-05` — Integrate Bridgeform `ExtractorRegistry` (BF-1): register existing Cliniq prompt modules as Option A entries (human-authored prompt + existing Pydantic model passed in)
+- [ ] `P2B-06` — Integrate Bridgeform `PromptCompiler` + `SchemaBuilder` (BF-2) for at least one entity type (medication) as proof of concept — confirm output identical to hand-authored path
+- [ ] `P2B-07` — Update `tests/test_cli.py`: add `--entities medication` selective extraction test
+- [ ] `P2B-08` — Update `docs/PRD.md` FR-2.8 status: mark BF-2 integration as in-progress
+
+### Acceptance Criteria
+
+- [ ] `cliniq extract ./corpus --entities medication,condition` extracts only those two entity types; other JSON files absent from output
+- [ ] `EXTRACTION_TOOLS` dict is the single registration point — adding an entry auto-includes it in `extract_all()` and CLI `--entities` choices
+- [ ] Bridgeform `ExtractorRegistry` holds at least one Cliniq entity (medication); `registry.extract("medication", text)` returns same results as direct `extract_medications()` call
+- [ ] All existing tests pass unchanged — no extraction behaviour regression
+- [ ] `pytest --cov-fail-under=80` passes
+
+### Definition of Done
+
+- [ ] All task checkboxes in this phase are checked
+- [ ] `ruff check`, `ruff format --check`, `mypy` pass with zero errors
+- [ ] `pytest --cov-fail-under=80` passes; no regressions vs. Phase 2
+- [ ] Remote CI green on `main` for all matrix legs (Python 3.11 + 3.12)
+- [ ] No PHI, real names, NHS numbers, or API keys in any committed file or CI log
+- [ ] `PLAN.md` task checkboxes updated to reflect actual state
+- [ ] **Human approval received before phase is marked complete**
+
+---
+
+## Phase 3 — MCP Server (Weeks 7–8)
 
 **Goal:** `cliniq serve` exposes tools consumable by Claude Desktop, Open WebUI, and any MCP client.
 
