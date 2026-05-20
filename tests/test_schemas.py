@@ -8,6 +8,7 @@ import pytest
 from pydantic import ValidationError
 
 from cliniq.schemas.appointment import Appointment
+from cliniq.schemas.condition import Condition, ConditionEvent, ConditionStatus
 from cliniq.schemas.contact import Contact
 from cliniq.schemas.medical_note import Diagnosis, MedicalNote, NoteType
 from cliniq.schemas.medication import Medication
@@ -121,3 +122,40 @@ def test_medication_roundtrip() -> None:
 def test_contact_is_clinic_default() -> None:
     c = Contact(name="Royal Free Hospital")
     assert c.is_clinic is True
+
+
+def test_condition_fixture() -> None:
+    data = json.loads((FIXTURES / "condition.json").read_text())
+    cond = Condition.model_validate(data)
+    assert cond.name == "Gallstones"
+    assert cond.status == ConditionStatus.MONITORING
+    assert len(cond.history) == 2
+    assert cond.history[0].measurement == "multiple small stones, largest 8mm"
+
+
+def test_condition_frozen() -> None:
+    cond = Condition(name="Hypertension", status=ConditionStatus.ACTIVE)
+    with pytest.raises((ValidationError, TypeError)):
+        cond.name = "mutated"  # type: ignore[misc]
+
+
+def test_condition_event_roundtrip() -> None:
+    from datetime import date as _date
+
+    event = ConditionEvent(event_date=_date(2023, 6, 1), measurement="LDL 4.2 mmol/L", notes="stable")
+    reloaded = ConditionEvent.model_validate(event.model_dump(mode="json"))
+    assert reloaded.measurement == "LDL 4.2 mmol/L"
+    assert str(reloaded.event_date) == "2023-06-01"
+
+
+def test_medication_new_fields() -> None:
+    data = json.loads((FIXTURES / "medication.json").read_text())
+    med = Medication.model_validate(data)
+    assert med.prescribed_by_name == "Dr. A. Venn"
+    assert med.duration_label == "long-term"
+
+
+def test_medication_new_fields_optional() -> None:
+    med = Medication(name="Ramipril", dose="5mg")
+    assert med.prescribed_by_name is None
+    assert med.duration_label is None

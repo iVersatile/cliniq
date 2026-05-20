@@ -16,4 +16,6 @@ class Medication(BaseModel):
     start_date: date | None = None
     end_date: date | None = None
     prescribed_by: UUID | None = None
+    prescribed_by_name: str | None = None
+    duration_label: str | None = None
     citation: str | None = None

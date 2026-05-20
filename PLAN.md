@@ -121,12 +121,20 @@
 - [ ] `P2-05` — Test Ollama with `phi3:mini` on full corpus; record precision/recall per field
 - [ ] `P2-06` — Tune prompts based on Ollama accuracy results
 - [x] `P2-07` — `tests/test_cli.py`: integration test — run `cliniq extract` on corpus dir; assert output JSON exists + validates
+- [ ] `P2-08` — Add `duration_label: str | None` and `prescribed_by_name: str | None` fields to `src/cliniq/schemas/medication.py`
+- [ ] `P2-09` — Create `src/cliniq/schemas/condition.py`: `ConditionStatus` enum, `ConditionEvent` model, `Condition` model with `history: list[ConditionEvent]` and `linked_medication_ids: list[UUID]`
+- [ ] `P2-10` — Extend extraction prompt in `src/cliniq/extraction/prompts/medical_note.py` to extract `Condition` entities (status, diagnosed_date, last_review_date, history with measurement + notes per event)
+- [ ] `P2-11` — Extend extraction prompt to populate `Medication.duration_label` and `Medication.prescribed_by_name` from document text
+- [ ] `P2-12` — Add `condition.json` output to `json_writer.py`; update `markdown_writer.py` to include conditions section with history table
+- [ ] `P2-13` — Add tests: `tests/test_schemas.py` for `Condition`/`ConditionEvent` round-trip; `tests/fixtures/schemas/condition.json` fixture
 
 ### Acceptance Criteria
 
 - [ ] `cliniq extract ./test_corpus --output /tmp/out --backend ollama` completes without unhandled exception on all 10 corpus docs
-- [ ] Output directory contains `medical_note.json`, `contact.json`, `appointment.json`, `medication.json`, `symptom.json` for each processed PDF
-- [ ] Every output JSON validates against its Pydantic schema
+- [ ] Output directory contains `medical_note.json`, `contact.json`, `appointment.json`, `medication.json`, `symptom.json`, `condition.json` for each processed PDF
+- [ ] Every output JSON validates against its Pydantic schema (six schemas including `condition`)
+- [ ] `condition.json` contains at least one `Condition` entry with non-empty `history` for corpus docs that contain condition data
+- [ ] `Medication` entries include `duration_label` and `prescribed_by_name` where present in source text
 - [ ] `summary.md` is written for each PDF and is human-readable
 - [ ] Medication name + dose precision >= 80% measured against ground-truth corpus (10 docs)
 - [ ] Precision/recall baseline recorded in `docs/accuracy_report.md`

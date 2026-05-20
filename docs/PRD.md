@@ -34,7 +34,7 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 
 - PDF ingestion: born-digital (pdfplumber) + scanned image (pytesseract/Tesseract 5)
 - LLM-backed extraction via pluggable adapter (Ollama default)
-- Five output schemas: `medical_note`, `contact`, `appointment`, `medication`, `symptom`
+- Six output schemas: `medical_note`, `contact`, `appointment`, `medication`, `symptom`, `condition`
 - JSON + Markdown output (importable by any AI tool)
 - CLI: `cliniq extract <dir> --output <dir> --backend ollama`
 - MCP server with tools: `extract_document`, `list_medications`, `get_timeline`
@@ -72,12 +72,15 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 | FR-2.2 | Every medication and diagnosis must include a verbatim source sentence for traceability |
 | FR-2.3 | Adapter is config-selectable at runtime (`--backend ollama`) |
 | FR-2.4 | Prompts must instruct the LLM to return null for absent fields, never hallucinate |
+| FR-2.5 | Extract `Condition` entities with `status`, `diagnosed_date`, `last_review_date`, and a `history` list of `ConditionEvent` records (date + measurement + notes) |
+| FR-2.6 | Populate `Medication.duration_label` (human-readable e.g. "for 2 years") and `Medication.prescribed_by_name` (denormalised prescriber name) from document text |
 
 ### FR-3 Output
 
 | ID | Requirement |
 |----|-------------|
-| FR-3.1 | Write per-document JSON files: `medical_note.json`, `contact.json`, `appointment.json`, `medication.json`, `symptom.json` |
+| FR-3.1 | Write per-document JSON files: `medical_note.json`, `contact.json`, `appointment.json`, `medication.json`, `symptom.json`, `condition.json` |
+| FR-3.5 | `condition.json` must include full `history` array per condition (drilldown timeline) and `linked_medication_ids` for dashboard cross-reference |
 | FR-3.2 | Write a human-readable `summary.md` per document |
 | FR-3.3 | All dates in ISO 8601 format (YYYY-MM-DD) |
 | FR-3.4 | UUIDs as stable cross-reference IDs between schemas |
@@ -128,7 +131,7 @@ Medical records are scattered across paper letters, scanned PDFs, and printed la
 
 - [ ] `cliniq extract ./test_corpus/born_digital/ --output /tmp/out` completes without error
 - [ ] `cliniq extract ./test_corpus/scanned/ --output /tmp/out` completes without error
-- [ ] Output JSON validates against all five Pydantic schemas
+- [ ] Output JSON validates against all six Pydantic schemas (including `condition`)
 - [ ] Handwritten-annotation PDFs produce `HANDWRITTEN_SECTION` flag, not a crash
 - [ ] Medication extraction precision >= 90% on ground-truth corpus (20+ docs)
 - [ ] `cliniq serve` starts MCP server; Claude Desktop can call `extract_document`
