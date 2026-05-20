@@ -25,7 +25,10 @@ def extract(pdfs_dir: Path, output: Path, backend: str) -> None:
     from cliniq.extraction.engine import ExtractionEngine
 
     output.mkdir(parents=True, exist_ok=True)
-    adapter = get_adapter(backend)
+    try:
+        adapter = get_adapter(backend)
+    except NotImplementedError as exc:
+        raise click.ClickException(str(exc)) from exc
     engine = ExtractionEngine(adapter=adapter)
 
     pdfs = list(pdfs_dir.glob("*.pdf"))

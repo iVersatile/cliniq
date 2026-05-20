@@ -379,6 +379,14 @@
 - [ ] `PC-07` — CI: add Docker push to `.github/workflows/release.yml` — on semver tag build + push `ghcr.io/<owner>/cliniq:<tag>` and `ghcr.io/<owner>/cliniq:latest`
 - [ ] `PC-08` — `scripts/local_test.py` check 6: `docker build` + `docker run --help` smoke (skipped gracefully if Docker not available)
 
+#### Phase Start Gate — code-review findings (fold in during Phase 8)
+
+- [ ] `PC-09` — [MEDIUM] `OllamaAdapter`: replace per-call `httpx.post()` with persistent `self._client = httpx.Client(timeout=120.0)`; close in `__del__`; fixes connection-pool churn across multi-PDF batches
+- [ ] `PC-10` — [MEDIUM] `cli.py extract`: catch `NotImplementedError` from `get_adapter()` and re-raise as `click.ClickException` with list of valid backends
+- [ ] `PC-11` — [MEDIUM] `OllamaAdapter._extract_json`: add `log.error(...)` on `json.JSONDecodeError` with the malformed substring before re-raising
+- [ ] `PC-12` — [HIGH — deferred to Phase 4] Add retry logic (3 attempts, exponential backoff) to `OllamaAdapter.complete()` and `complete_json()` — deferred until accuracy baseline established in Phase 4
+- [ ] `PC-13` — [HIGH — deferred to Phase 4] Add `OllamaAdapter.health_check()` method; call at CLI startup to surface bad `OLLAMA_BASE_URL` early — deferred to Phase 4
+
 ### Acceptance Criteria
 
 - [ ] `OllamaAdapter` reads `OLLAMA_BASE_URL` from environment; unit test verifies default + override

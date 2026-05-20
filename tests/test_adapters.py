@@ -29,7 +29,7 @@ def test_get_adapter_unknown() -> None:
 
 
 def test_ollama_complete() -> None:
-    with patch("cliniq.adapters.ollama.httpx.post") as mock_post:
+    with patch("httpx.Client.post") as mock_post:
         mock_post.return_value = _mock_response("hello world")
         adapter = OllamaAdapter()
         result = adapter.complete(system="sys", user="hello")
@@ -37,7 +37,7 @@ def test_ollama_complete() -> None:
 
 
 def test_ollama_complete_sends_correct_payload() -> None:
-    with patch("cliniq.adapters.ollama.httpx.post") as mock_post:
+    with patch("httpx.Client.post") as mock_post:
         mock_post.return_value = _mock_response("ok")
         adapter = OllamaAdapter(model="phi3:mini", base_url="http://localhost:11434")
         adapter.complete(system="sys", user="msg")
@@ -51,7 +51,7 @@ def test_ollama_complete_sends_correct_payload() -> None:
 
 def test_ollama_complete_json() -> None:
     data = {"name": "Amlodipine", "dose": "5mg"}
-    with patch("cliniq.adapters.ollama.httpx.post") as mock_post:
+    with patch("httpx.Client.post") as mock_post:
         mock_post.return_value = _mock_response(f"Here is your JSON: {json.dumps(data)}")
         adapter = OllamaAdapter()
         result = adapter.complete_json(system="sys", user="extract", schema={})
@@ -59,7 +59,7 @@ def test_ollama_complete_json() -> None:
 
 
 def test_ollama_complete_json_sends_format_param() -> None:
-    with patch("cliniq.adapters.ollama.httpx.post") as mock_post:
+    with patch("httpx.Client.post") as mock_post:
         mock_post.return_value = _mock_response('{"ok": true}')
         OllamaAdapter().complete_json(system="sys", user="extract", schema={})
 
@@ -70,7 +70,7 @@ def test_ollama_complete_json_sends_format_param() -> None:
 def test_ollama_complete_json_markdown_fence() -> None:
     data = {"x": 1}
     fenced = f"```json\n{json.dumps(data)}\n```"
-    with patch("cliniq.adapters.ollama.httpx.post") as mock_post:
+    with patch("httpx.Client.post") as mock_post:
         mock_post.return_value = _mock_response(fenced)
         result = OllamaAdapter().complete_json(system="sys", user="u", schema={})
     assert result == data
@@ -78,14 +78,14 @@ def test_ollama_complete_json_markdown_fence() -> None:
 
 def test_ollama_complete_json_array_response() -> None:
     data = [{"name": "Drug A"}, {"name": "Drug B"}]
-    with patch("cliniq.adapters.ollama.httpx.post") as mock_post:
+    with patch("httpx.Client.post") as mock_post:
         mock_post.return_value = _mock_response(json.dumps(data))
         result = OllamaAdapter().complete_json(system="sys", user="u", schema={})
     assert result == data
 
 
 def test_ollama_complete_json_no_json_raises() -> None:
-    with patch("cliniq.adapters.ollama.httpx.post") as mock_post:
+    with patch("httpx.Client.post") as mock_post:
         mock_post.return_value = _mock_response("sorry I cannot help with that")
         with pytest.raises(ValueError, match="no JSON structure"):
             OllamaAdapter().complete_json(system="sys", user="u", schema={})

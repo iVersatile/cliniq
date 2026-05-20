@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import logging
+import os
 from typing import Any
 
 import httpx
@@ -11,6 +13,8 @@ from cliniq.adapters.base import LLMAdapter
 
 _DEFAULT_MODEL = "phi3:mini"
 _DEFAULT_BASE_URL = "http://localhost:11434"
+
+log = logging.getLogger(__name__)
 
 
 def _extract_json(raw: str) -> Any:
@@ -34,16 +38,32 @@ def _extract_json(raw: str) -> Any:
         start = obj_start
         end = stripped.rfind("}") + 1
 
-    return json.loads(stripped[start:end])
+    substring = stripped[start:end]
+    try:
+        return json.loads(substring)
+    except json.JSONDecodeError as exc:
+        log.error("_extract_json: malformed JSON substring: %r", substring[:200])
+        raise ValueError(f"malformed JSON in LLM response: {exc}") from exc
 
 
 class OllamaAdapter(LLMAdapter):
-    def __init__(self, model: str = _DEFAULT_MODEL, base_url: str = _DEFAULT_BASE_URL) -> None:
+    def __init__(
+        self,
+        model: str = _DEFAULT_MODEL,
+        base_url: str | None = None,
+    ) -> None:
         self.model = model
-        self.base_url = base_url
+        self.base_url = base_url or os.environ.get("OLLAMA_BASE_URL", _DEFAULT_BASE_URL)
+        self._client = httpx.Client(timeout=120.0)
+
+    def __del__(self) -> None:
+        try:
+            self._client.close()
+        except Exception:  # noqa: BLE001
+            pass
 
     def complete(self, system: str, user: str) -> str:
-        response = httpx.post(
+        response = self._client.post(
             f"{self.base_url}/api/chat",
             json={
                 "model": self.model,
@@ -53,7 +73,6 @@ class OllamaAdapter(LLMAdapter):
                 ],
                 "stream": False,
             },
-            timeout=120,
         )
         response.raise_for_status()
         return str(response.json()["message"]["content"])
@@ -61,7 +80,7 @@ class OllamaAdapter(LLMAdapter):
     def complete_json(self, system: str, user: str, schema: dict[str, Any]) -> Any:
         schema_str = json.dumps(schema, indent=2)
         prompt = f"{user}\n\nRespond with valid JSON matching this schema:\n{schema_str}"
-        response = httpx.post(
+        response = self._client.post(
             f"{self.base_url}/api/chat",
             json={
                 "model": self.model,
@@ -72,7 +91,6 @@ class OllamaAdapter(LLMAdapter):
                 "stream": False,
                 "format": "json",
             },
-            timeout=120,
         )
         response.raise_for_status()
         raw = str(response.json()["message"]["content"])

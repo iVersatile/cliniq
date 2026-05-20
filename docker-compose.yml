@@ -1,0 +1,19 @@
+services:
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  cliniq:
+    build: .
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+    volumes:
+      - ./records:/app/records
+    depends_on:
+      - ollama
+
+volumes:
+  ollama_data:
